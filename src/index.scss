@@ -9,21 +9,20 @@ body {
 
 .card {
   margin-top: 50px;
-}
-
-.card-header {
-  background-color: #3f51b5;
+  &-header {
+    background-color: #3f51b5;
   padding-top: 25px;
   padding-bottom: 20px;
-}
-
-.charts {
-  padding-top: 10px;
-  padding-bottom: 10px;
-  border-top: 1px solid rgb(170, 170, 170);
-  border-bottom: 1px solid rgb(170, 170, 170);
-}
-
-.charts:hover {
-  background-color: rgb(230, 230, 230);
+  }
+  &-body {
+    .charts {
+      padding-top: 10px;
+      padding-bottom: 10px;
+      border-top: 1px solid rgb(170, 170, 170);
+      border-bottom: 1px solid rgb(170, 170, 170);
+      &:hover {
+        background-color: rgb(230, 230, 230);
+      }
+    }
+  }
 }

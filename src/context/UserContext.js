@@ -16,6 +16,8 @@ const UserProvider = ({ children }) => {
     const [ email, setEmail ] = React.useState("");
     const [ password, setPassword ] = React.useState("");
     const [ confirmPassword, setConfirmPassword ] = React.useState("");
+    
+    const [ carts, setCarts ] = React.useState([])
 
     // state for login
     const [ logEmail, setLogEmail ] = React.useState("");
@@ -73,7 +75,8 @@ const UserProvider = ({ children }) => {
             email,
             password,
             passwordCheck: confirmPassword,
-            displayName
+            displayName,
+            carts
         }
 
         // connect node and react
@@ -136,7 +139,8 @@ const UserProvider = ({ children }) => {
             user: {
                 id: res.googleId,
                 displayName: res.profileObj.name,
-                email: res.profileObj.email
+                email: res.profileObj.email,
+                carts: []
             }
         })
 

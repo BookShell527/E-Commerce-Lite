@@ -1,14 +1,17 @@
 const router = require("express").Router();
-const User = require('../models/UserModels');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const auth = require('../middleware/auth')
+
+// models
+const User = require('../models/UserModels');
+const Product = require('../models/ProductModel');
 
 // for register
 // return json object
 router.post("/register", async (req, res) => {
     try {
-        const { email, password, passwordCheck, displayName } = req.body;
+        const { email, password, passwordCheck, displayName, carts } = req.body;
         
         // validation
         if (!email || !password || !passwordCheck || !displayName) return res.status(400).json({ msg: "Not all field has been entered" });
@@ -24,7 +27,8 @@ router.post("/register", async (req, res) => {
         const newUser = new User({
             email,
             password: passwordHash,
-            displayName
+            displayName,
+            carts
         });
 
         const savedUser = await newUser.save();
@@ -101,10 +105,58 @@ router.get('/', auth, async (req, res) => {
             id: user._id,
             displayName: user.displayName,
             email: user.email,
+            carts: user.carts
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
+
+// to add product to carts
+router.post('/addProduct/:productId/:userId', async (req, res) => {
+    try {
+        // take data
+        const { productId, userId } = req.params;
+        const { productAmount } = req.body;
+
+        // find user & product
+        const product = await Product.findById(productId);
+        const selectedUser = await User.findById(userId);
+
+        // validation
+        if (product.sellerId === userId) return res.status(400).json({ msg: "You can't buy your own product" });
+
+        // object to insert
+        const updatedCarts = {
+            id: product._id,
+            sellerId: product.sellerId,
+            title: product.title,
+            price: product.price,
+            imgLink: product.imgLink,
+            productAmount: parseInt(productAmount)
+        }
+
+        const updatedOrdered = {
+            buyerId: selectedUser._id,
+            buyer: selectedUser.displayName,
+            buyerEmail: selectedUser.email,
+            amount: parseInt(productAmount)
+        }
+
+        // enter the data
+        product.ordered.unshift(updatedOrdered);
+        product.save();
+
+        selectedUser.carts.unshift(updatedCarts);
+        selectedUser.save();
+
+        res.json({
+            selectedUser,
+            product
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+})
 
 module.exports = router;

@@ -15,11 +15,6 @@ app.use(express.urlencoded({
     extended: true
 }));
 
-
-
-
-console.log(NODE_ENV);
-
 // set up mongoose
 const MONGO_URI = process.env.MONGO_URI;
 
@@ -36,7 +31,9 @@ mongoose.connect(
     );
     
     // set routes
-    const route = require("./routes/user");
-    app.use("/user", route);
+    const userRoute = require("./routes/user");
+    const productRoute = require("./routes/product");
+    app.use("/user", userRoute);
+    app.use("/product", productRoute);
 
 app.listen(PORT, console.log(`${PORT} Success`));
