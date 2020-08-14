@@ -2,6 +2,7 @@ const router = require("express").Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const auth = require('../middleware/auth')
+const { v4 } = require('uuid');
 
 // models
 const User = require('../models/UserModels');
@@ -129,6 +130,7 @@ router.post('/addProduct/:productId/:userId', async (req, res) => {
         // take data
         const { productId, userId } = req.params;
         const { productAmount } = req.body;
+        const tradeId = v4();
 
         // find user & product
         const product = await Product.findById(productId);
@@ -139,6 +141,7 @@ router.post('/addProduct/:productId/:userId', async (req, res) => {
 
         // object to insert
         const updatedCarts = {
+            tradeId,
             id: product._id,
             sellerId: product.sellerId,
             title: product.title,
@@ -148,6 +151,7 @@ router.post('/addProduct/:productId/:userId', async (req, res) => {
         }
 
         const updatedOrdered = {
+            tradeId,
             buyerId: selectedUser._id,
             buyer: selectedUser.displayName,
             buyerEmail: selectedUser.email,
@@ -171,9 +175,9 @@ router.post('/addProduct/:productId/:userId', async (req, res) => {
 })
 
 // edit carts
-router.post('/editProduct/:productId/:userId', async (req, res) => {
+router.post('/editProduct/:productId/:userId/:tradeId', async (req, res) => {
     try {
-        const { productId, userId } = req.params;
+        const { productId, userId, tradeId } = req.params;
         const { productAmount } = req.body;
 
         // validation
@@ -184,22 +188,20 @@ router.post('/editProduct/:productId/:userId', async (req, res) => {
         const user = await User.findById(userId);
         
         // modifying and save
-        const selectedOrder = product.ordered.filter(m => toString(m.id) === toString(productId));
+        const selectedOrder = product.ordered.filter(m => m.tradeId === tradeId);
         selectedOrder.map(m => m.amount = parseInt(productAmount));
         product.markModified("ordered");
         await product.save();
         
-        const selectedCarts = user.carts.filter(m => toString(m.id) === toString(productId));
-        selectedCarts.map(m => {
-            m.productAmount = parseInt(productAmount)
-        });
+        const selectedCarts = user.carts.filter(m => m.tradeId === tradeId);
+        selectedCarts.map(m => m.productAmount = parseInt(productAmount));
         user.markModified("carts");
         await user.save();
 
         // response
         res.json({
-            product,
-            user
+            selectedOrder,
+            selectedCarts
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -207,29 +209,28 @@ router.post('/editProduct/:productId/:userId', async (req, res) => {
 })
 
 // delete product from carts
-router.post('/deleteProduct/:productId/:userId', async (req, res) => {
+router.post('/deleteProduct/:productId/:userId/:tradeId', async (req, res) => {
     try {
-        const { productId, userId } = req.params;
-        // console.log(productId, userId);
+        const { productId, userId, tradeId } = req.params;
 
         // selected data
         const product = await Product.findById(productId);
         const user = await User.findById(userId);
 
         // delete and save the data
-        const remainingOrder = product.ordered.filter(m => toString(m.buyerId) !== toString(userId));
+        const remainingOrder = product.ordered.filter(m => m.tradeId !== tradeId);
         product.ordered = remainingOrder;
-        product.markModified("ordered");
+        // product.markModified("ordered");
         const updatedOrder = await product.save();
         
-        const remainingCarts = user.carts.filter(m => toString(m.id) !== toString(productId));
+        const remainingCarts = user.carts.filter(m => m.tradeId !== tradeId);
         user.carts = remainingCarts;
-        user.markModified("carts");
+        // user.markModified("carts");
         const updatedCarts = await user.save();
 
         res.json({
-            updatedOrder,
-            updatedCarts
+            remainingOrder,
+            remainingCarts
         })
     } catch (err) {
         res.status(500).json({ error: err.message });

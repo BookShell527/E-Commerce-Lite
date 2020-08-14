@@ -1,11 +1,12 @@
 import React from 'react'
-import { Modal, Button, Card } from "react-bootstrap";
+import { Modal, Button } from "react-bootstrap";
 
 const Modals = props => {
     if (props.edit) {
         return (
             <Modal show={props.show}
                 onHide={props.onHides}
+                className="overflow-scroll"
             >
                 <Modal.Header closeButton>
                     <Modal.Title className="d-inline-block">Edit & Product Detail</Modal.Title>
@@ -29,12 +30,12 @@ const Modals = props => {
                     onHide={props.onHides}
                 >
                     <Modal.Header closeButton>
-                        <Modal.Title className="d-inline-block">Delete Product From The Charts</Modal.Title>
+                        <Modal.Title>Delete Product From The Charts</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body className="text-center">
+                    <Modal.Body >
                         { props.children }
                     </Modal.Body>
-                    <Modal.Footer>
+                    <Modal.Footer className="text-left">
                         <Button variant="primary" 
                             onClick={ props.onClicks2 } 
                         >

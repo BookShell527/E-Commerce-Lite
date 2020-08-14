@@ -10,8 +10,16 @@ import Modals from '../components/Modals';
 
 const MyCharts = () => {
     const { userData, setUserData, amount, setAmount, addAmount, reduceAmount } = React.useContext(UserContext);
+    
     const [ carts, setCarts ] = React.useState([0]);
+
     const [ productId, setProductId ] = React.useState("");
+    const [ tradeId, setTradeId ] = React.useState("");
+    const [ imgLink, setImgLink ] = React.useState("");
+    const [ title, setTitle ] = React.useState("");
+    const [ price, setPrice ] = React.useState("");
+    const [ sellerId, setSellerId ] = React.useState("");
+    
     const [ search, setSearch ] = React.useState("");
 
     // avoid property of undefined
@@ -20,6 +28,8 @@ const MyCharts = () => {
             setCarts(userData.user.carts);
         }
     }, [userData]);
+
+    console.log(tradeId);
 
     // state and for modal
     const [ show, setShow ] = React.useState(false);
@@ -30,7 +40,7 @@ const MyCharts = () => {
         const changeAmount = { productAmount: amount }
 
         // connect server and react
-        const response = await axios.post(`http://localhost:5000/user/editProduct/${productId}/${userData.user.id}`, changeAmount);
+        const response = await axios.post(`http://localhost:5000/user/editProduct/${productId}/${userData.user.id}/${tradeId}`, changeAmount);
         // setUserData
         setUserData({
             token: userData.token,
@@ -39,7 +49,12 @@ const MyCharts = () => {
 
         // reset state
         setShow(false);
+        setImgLink("");
+        setPrice("");
+        setSellerId("");
+        setTitle("");
         setProductId("");
+        setTradeId("");
         setAmount("");
 
         // refresh window
@@ -48,7 +63,7 @@ const MyCharts = () => {
 
     const deleteCarts = async () => {
         // connect server and react
-        const response = await axios.post(`http://localhost:5000/user/deleteProduct/${productId}/${userData.user.id}`);
+        const response = await axios.post(`http://localhost:5000/user/deleteProduct/${productId}/${userData.user.id}/${tradeId}`);
     
         // set userData
         setUserData({
@@ -57,19 +72,21 @@ const MyCharts = () => {
         });
     
         // reset state
+        setTradeId("");
+        setShow2(false);
         setProductId("");
     
         // refresh window
         window.location = "/my-account/carts";
     }
 
-    const searchFilter = item => {
+    const searchFilter = (item, index) => {
         if (search !== "" && item.title.toLowerCase().indexOf(search.toLowerCase()) === -1) {
             return null
         }
 
         return (
-            <div className="acc-options text-left pl-3 pr-1 pr-4 d-flex">
+            <div className="acc-options text-left pl-3 pr-1 pr-4 d-flex" key={index}>
                 <div className="d-inline-block">
                     <img src={item.imgLink} alt={item.title} width="100px" />
                     <h5 className="d-inline-block ml-3">{item.title} x{item.productAmount}</h5>
@@ -79,6 +96,7 @@ const MyCharts = () => {
                         <DeleteIcon style={{transform: "scale(1.4)"}} 
                             onClick={() => {
                                 setProductId(item.id);
+                                setTradeId(item.tradeId);
                                 setShow2(true);
                             }}
                         />
@@ -87,46 +105,17 @@ const MyCharts = () => {
                         <EditIcon style={{transform: "scale(1.4)"}} className="ml-3" 
                             onClick={() => {
                                 setShow(true);
+                                setImgLink(item.imgLink);
+                                setPrice(item.price);
+                                setSellerId(item.sellerId);
+                                setTitle(item.title);
                                 setProductId(item.id);
+                                setTradeId(item.tradeId);
                                 setAmount(item.productAmount);
                             }}
                         />
                     </Link>
                 </div>
-                <Modals show={show} edit={true} 
-                    onClicks={ changeCarts }
-                    onHides={
-                        () => {
-                        setShow(false);
-                        setProductId("");
-                        setAmount("");
-                    }}>
-                    <img src={item.imgLink} alt={item.title} width="200" />
-                    <h6 className="mt-3">Name: {item.title}</h6>
-                    <h6>Product ID: {item.id}</h6>
-                    <h6>Price: ${parseFloat(item.price)}</h6>
-                    <h6>Seller ID: {item.sellerId}</h6>
-                    <h5>Amount</h5>
-                    <h5>
-                        <button className="btn btn-danger mr-3" onClick={reduceAmount}>-</button>
-                        {amount}
-                        <button className="btn btn-primary ml-3" onClick={addAmount}>+</button>
-                    </h5>
-                    <h5>Total</h5>
-                    <h5>
-                        ${ amount * parseInt(item.price) }
-                    </h5>
-                </Modals>
-                <Modals show={show2} edit={false}
-                    onClicks2={() => setShow2(false)}
-                    onClicks={deleteCarts}
-                    onHides={() => {
-                        setShow2(false);
-                        setProductId("");
-                    }}
-                >
-                    Are You Sure
-                </Modals>
         </div>
         )
     }
@@ -146,11 +135,55 @@ const MyCharts = () => {
                 </Form>
                     {
                         carts.map((m,i) => {
-                            return searchFilter(m)
+                            return searchFilter(m,i)
                         })
                     }
                 </Card.Body>
             </Card>
+            <Modals show={show} edit={true} 
+                    onClicks={ changeCarts }
+                    onHides={
+                        () => {
+                        setShow(false);
+                        setImgLink("");
+                        setPrice("");
+                        setSellerId("");
+                        setTitle("");
+                        setProductId("");
+                        setTradeId("");
+                        setAmount("");
+                    }}>
+                    <img src={imgLink} alt={title} width="200" />
+                    <h6 className="mt-3">Name: {title}</h6>
+                    <h6>Product ID: {productId}</h6>
+                    <h6>Price: ${parseFloat(price)}</h6>
+                    <h6>Seller ID: {sellerId}</h6>
+                    <h5>Amount</h5>
+                    <h5>
+                        <button className="btn btn-danger mr-3" onClick={reduceAmount}>-</button>
+                        {amount}
+                        <button className="btn btn-primary ml-3" onClick={addAmount}>+</button>
+                    </h5>
+                    <h5>Total</h5>
+                    <h5>
+                        ${ amount * parseInt(price) }
+                    </h5>
+                </Modals>
+                <Modals show={show2} edit={false}
+                    onClicks2={() => {
+                        setTradeId("");
+                        setShow2(false);
+                        setProductId("");
+                    }}
+                    onClicks={deleteCarts}
+                    onHides={() => {
+                        setTradeId("");
+                        setShow2(false);
+                        setProductId("");
+                    }}
+                >
+                    Are You Sure
+                </Modals>
         </div>
     );
 }
