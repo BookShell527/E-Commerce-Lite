@@ -17,17 +17,19 @@ const UserProvider = ({ children }) => {
     const [ password, setPassword ] = React.useState("");
     const [ confirmPassword, setConfirmPassword ] = React.useState("");
     
-    const [ carts, setCarts ] = React.useState([])
-
     // state for login
     const [ logEmail, setLogEmail ] = React.useState("");
     const [ logPassword, setLogPassword ] = React.useState("");
+    
+    // state for carts
+    const [ carts, setCarts ] = React.useState([]);
+    const [ amount, setAmount ] = React.useState(0);
 
     const history = useHistory();
 
     // useEffect to avoid property of undefined
     React.useEffect(() => {
-        // checl if user logged in or not
+        // check if user logged in or not
         const checkedLoggedIn = async () => {
             let token = localStorage.getItem("auth-token");
             if (token === null) {
@@ -59,6 +61,7 @@ const UserProvider = ({ children }) => {
     }, [])
     
 
+    // logout
     const logOut = () => {
         // reset userData
         setUserData({
@@ -69,6 +72,7 @@ const UserProvider = ({ children }) => {
         localStorage.setItem("auth-token", "");
     }
 
+    // register
     const registerSubmit = async e => {
         e.preventDefault();
         const newUser = {
@@ -104,6 +108,7 @@ const UserProvider = ({ children }) => {
         history.push("/");
     }
 
+    // login
     const loginSubmit = async e => {
         e.preventDefault();
 
@@ -132,6 +137,7 @@ const UserProvider = ({ children }) => {
         history.push("/");
     }
 
+    // google login
     const loginGoogle = res => {
         // set user data
         setUserData({
@@ -149,8 +155,12 @@ const UserProvider = ({ children }) => {
         history.push("/");
     }
 
+    // change carts data
+    const addAmount = () => setAmount(m => m + 1);
+    const reduceAmount = () => setAmount(m => m - 1)
+
     return (
-        <UserContext.Provider value={{ userData, setUserData, setDisplayName, setEmail, setPassword, setConfirmPassword, setLogEmail, setLogPassword, logOut, registerSubmit, loginSubmit, loginGoogle }}>
+        <UserContext.Provider value={{ userData, amount, setAmount, addAmount, reduceAmount, setUserData, setDisplayName, setEmail, setPassword, setConfirmPassword, setLogEmail, setLogPassword, logOut, registerSubmit, loginSubmit, loginGoogle }}>
             { children }
         </UserContext.Provider>
     );

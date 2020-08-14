@@ -30,7 +30,10 @@ const MyAccount = () => {
                         <h6>Email: { user.email }</h6>
                     </div>
                     <Link to="/my-account/carts" className="text-decoration-none">
-                        <div className="charts text-left pl-1 pr-1 text-dark">Your Carts <ArrowForwardIosIcon className="float-right" /></div>
+                        <div className="acc-options text-left pl-1 pr-1 text-dark">My Carts <ArrowForwardIosIcon className="float-right" /></div>
+                    </Link>
+                    <Link to="/my-account/my-product" className="text-decoration-none">
+                        <div className="acc-options text-left pl-1 pr-1 text-dark">My Product <ArrowForwardIosIcon className="float-right" /></div>
                     </Link>
                     <div className="mt-3">
                         <Link to="/login" className="text-danger text-decoration-none mt-2 logout" onClick={logOut}><ExitToAppIcon />Log Out</Link>

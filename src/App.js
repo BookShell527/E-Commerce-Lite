@@ -7,9 +7,12 @@ import Navbar from "./components/Navbar";
 import UserProvider from './context/UserContext'
 import MyAccount from './pages/MyAccount';
 import MyCarts from './pages/MyCarts';
+import MyProduct from './pages/MyProduct';
 
 export default function App() {
-  return (
+  const emptyConsole = () => {}
+  
+  return ( 
     <BrowserRouter>
       <UserProvider>
         <Navbar/>
@@ -19,6 +22,7 @@ export default function App() {
           <Route exact path="/register" component={Register} />
           <Route exact path="/my-account" component={MyAccount} />
           <Route exact path="/my-account/carts" component={MyCarts} />
+          <Route exact path="/my-account/my-product" component={MyProduct} />
         </Switch>
       </UserProvider>
     </BrowserRouter>

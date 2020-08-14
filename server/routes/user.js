@@ -112,6 +112,17 @@ router.get('/', auth, async (req, res) => {
     }
 });
 
+// to find user with id
+router.get('/findById/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const user = User.findById(id);
+        res.json(user);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+})
+
 // to add product to carts
 router.post('/addProduct/:productId/:userId', async (req, res) => {
     try {
@@ -131,7 +142,7 @@ router.post('/addProduct/:productId/:userId', async (req, res) => {
             id: product._id,
             sellerId: product.sellerId,
             title: product.title,
-            price: product.price,
+            price: parseInt(product.price),
             imgLink: product.imgLink,
             productAmount: parseInt(productAmount)
         }
@@ -145,15 +156,81 @@ router.post('/addProduct/:productId/:userId', async (req, res) => {
 
         // enter the data
         product.ordered.unshift(updatedOrdered);
-        product.save();
+        await product.save();
 
         selectedUser.carts.unshift(updatedCarts);
-        selectedUser.save();
+        await selectedUser.save();
 
         res.json({
             selectedUser,
             product
         });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+})
+
+// edit carts
+router.post('/editProduct/:productId/:userId', async (req, res) => {
+    try {
+        const { productId, userId } = req.params;
+        const { productAmount } = req.body;
+
+        // validation
+        if (!productAmount) return res.status(400).json({ msg: "Not all field has been entered" })
+    
+        // selected data
+        const product = await Product.findById(productId);
+        const user = await User.findById(userId);
+        
+        // modifying and save
+        const selectedOrder = product.ordered.filter(m => toString(m.id) === toString(productId));
+        selectedOrder.map(m => m.amount = parseInt(productAmount));
+        product.markModified("ordered");
+        await product.save();
+        
+        const selectedCarts = user.carts.filter(m => toString(m.id) === toString(productId));
+        selectedCarts.map(m => {
+            m.productAmount = parseInt(productAmount)
+        });
+        user.markModified("carts");
+        await user.save();
+
+        // response
+        res.json({
+            product,
+            user
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+})
+
+// delete product from carts
+router.post('/deleteProduct/:productId/:userId', async (req, res) => {
+    try {
+        const { productId, userId } = req.params;
+        // console.log(productId, userId);
+
+        // selected data
+        const product = await Product.findById(productId);
+        const user = await User.findById(userId);
+
+        // delete and save the data
+        const remainingOrder = product.ordered.filter(m => toString(m.buyerId) !== toString(userId));
+        product.ordered = remainingOrder;
+        product.markModified("ordered");
+        const updatedOrder = await product.save();
+        
+        const remainingCarts = user.carts.filter(m => toString(m.id) !== toString(productId));
+        user.carts = remainingCarts;
+        user.markModified("carts");
+        const updatedCarts = await user.save();
+
+        res.json({
+            updatedOrder,
+            updatedCarts
+        })
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

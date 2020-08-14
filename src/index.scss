@@ -7,6 +7,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+// my accoun
 .card {
   margin-top: 50px;
   &-header {
@@ -15,10 +16,9 @@ body {
   padding-bottom: 20px;
   }
   &-body {
-    .charts {
+    .acc-options {
       padding-top: 10px;
       padding-bottom: 10px;
-      border-top: 1px solid rgb(170, 170, 170);
       border-bottom: 1px solid rgb(170, 170, 170);
       &:hover {
         background-color: rgb(230, 230, 230);
