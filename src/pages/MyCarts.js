@@ -64,7 +64,71 @@ const MyCharts = () => {
     }
 
     const searchFilter = item => {
-        
+        if (search !== "" && item.title.toLowerCase().indexOf(search.toLowerCase()) === -1) {
+            return null
+        }
+
+        return (
+            <div className="acc-options text-left pl-3 pr-1 pr-4 d-flex">
+                <div className="d-inline-block">
+                    <img src={item.imgLink} alt={item.title} width="100px" />
+                    <h5 className="d-inline-block ml-3">{item.title} x{item.productAmount}</h5>
+                </div>
+                <div className="d-inline-block align-self-center ml-auto">
+                    <Link to="/my-account/carts" className="text-danger">
+                        <DeleteIcon style={{transform: "scale(1.4)"}} 
+                            onClick={() => {
+                                setProductId(item.id);
+                                setShow2(true);
+                            }}
+                        />
+                    </Link>
+                    <Link to="/my-account/carts">
+                        <EditIcon style={{transform: "scale(1.4)"}} className="ml-3" 
+                            onClick={() => {
+                                setShow(true);
+                                setProductId(item.id);
+                                setAmount(item.productAmount);
+                            }}
+                        />
+                    </Link>
+                </div>
+                <Modals show={show} edit={true} 
+                    onClicks={ changeCarts }
+                    onHides={
+                        () => {
+                        setShow(false);
+                        setProductId("");
+                        setAmount("");
+                    }}>
+                    <img src={item.imgLink} alt={item.title} width="200" />
+                    <h6 className="mt-3">Name: {item.title}</h6>
+                    <h6>Product ID: {item.id}</h6>
+                    <h6>Price: ${parseFloat(item.price)}</h6>
+                    <h6>Seller ID: {item.sellerId}</h6>
+                    <h5>Amount</h5>
+                    <h5>
+                        <button className="btn btn-danger mr-3" onClick={reduceAmount}>-</button>
+                        {amount}
+                        <button className="btn btn-primary ml-3" onClick={addAmount}>+</button>
+                    </h5>
+                    <h5>Total</h5>
+                    <h5>
+                        ${ amount * parseInt(item.price) }
+                    </h5>
+                </Modals>
+                <Modals show={show2} edit={false}
+                    onClicks2={() => setShow2(false)}
+                    onClicks={deleteCarts}
+                    onHides={() => {
+                        setShow2(false);
+                        setProductId("");
+                    }}
+                >
+                    Are You Sure
+                </Modals>
+        </div>
+        )
     }
 
     return (
@@ -78,72 +142,11 @@ const MyCharts = () => {
                 </Card.Header>
                 <Card.Body className="card-body text-center p-0">
                 <Form inline className="p-3">
-                    <FormControl type="text" placeholder="Search" className="mr-sm-2 w-75" />
-                    <Button variant="outline-primary">Search</Button>
+                    <FormControl type="text" placeholder="Search" className="w-100" onChange={e => setSearch(e.target.value)} />
                 </Form>
                     {
                         carts.map((m,i) => {
-                            return (
-                                <div className="acc-options text-left pl-3 pr-1 pr-4 d-flex" key={i}>
-                                    <div className="d-inline-block">
-                                        <img src={m.imgLink} alt={m.title} width="100px" />
-                                        <h5 className="d-inline-block ml-3">{m.title} x{m.productAmount}</h5>
-                                    </div>
-                                    <div className="d-inline-block align-self-center ml-auto">
-                                        <Link to="/my-account/carts" className="text-danger">
-                                            <DeleteIcon style={{transform: "scale(1.4)"}} 
-                                                onClick={() => {
-                                                    setProductId(m.id);
-                                                    setShow2(true);
-                                                }}
-                                            />
-                                        </Link>
-                                        <Link to="/my-account/carts">
-                                            <EditIcon style={{transform: "scale(1.4)"}} className="ml-3" 
-                                                onClick={() => {
-                                                    setShow(true);
-                                                    setProductId(m.id);
-                                                    setAmount(m.productAmount);
-                                                }}
-                                            />
-                                        </Link>
-                                    </div>
-                                    <Modals show={show} edit={true} 
-                                        onClicks={ changeCarts }
-                                        onHides={
-                                            () => {
-                                            setShow(false);
-                                            setProductId("");
-                                            setAmount("");
-                                        }}>
-                                        <img src={m.imgLink} alt={m.title} width="200" />
-                                        <h6 className="mt-3">Name: {m.title}</h6>
-                                        <h6>Product ID: {m.id}</h6>
-                                        <h6>Price: ${parseFloat(m.price)}</h6>
-                                        <h6>Seller ID: {m.sellerId}</h6>
-                                        <h5>Amount</h5>
-                                        <h5>
-                                            <button className="btn btn-danger mr-3" onClick={reduceAmount}>-</button>
-                                            {amount}
-                                            <button className="btn btn-primary ml-3" onClick={addAmount}>+</button>
-                                        </h5>
-                                        <h5>Total</h5>
-                                        <h5>
-                                            ${ amount * parseInt(m.price) }
-                                        </h5>
-                                    </Modals>
-                                    <Modals show={show2} edit={false}
-                                        onClicks2={() => setShow2(false)}
-                                        onClicks={deleteCarts}
-                                        onHides={() => {
-                                            setShow2(false);
-                                            setProductId("");
-                                        }}
-                                    >
-                                        Are You Sure
-                                    </Modals>
-                                </div>
-                            )
+                            return searchFilter(m)
                         })
                     }
                 </Card.Body>
