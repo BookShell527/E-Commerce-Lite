@@ -16,6 +16,9 @@ body {
   padding-bottom: 20px;
   }
   &-body {
+    .add-product:hover {
+      background-color: rgb(230, 230, 230);
+    }
     .acc-options {
       padding-top: 10px;
       padding-bottom: 10px;

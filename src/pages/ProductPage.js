@@ -111,7 +111,7 @@ const ProductPage = props => {
                         setShow(false);
                     }}
                 >
-                    Are You Sure
+                    Are You Sure?
             </Modals>
             <Modals show={show2} edit={true} title="Edit Product"
                 onClicks={changeProduct}

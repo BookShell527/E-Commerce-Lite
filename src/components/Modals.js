@@ -24,6 +24,24 @@ const Modals = props => {
                 </Modal.Footer>
             </Modal>
         )
+    } else if (props.error) {
+        return (
+            <Modal show={props.show}
+                onHide={props.onHides}
+            >
+                <Modal.Body className="text-center" closeButton >
+                    {props.children}
+                </Modal.Body>
+                <Modal.Footer className="border-0">
+                    <Button variant="primary" 
+                        onClick={props.onClicks} 
+                    className="m-auto"
+                    >
+                        Ok
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        )
     } else {
         return (
                 <Modal show={props.show}

@@ -1,22 +1,62 @@
-import React from 'react';
-import { Card, Form, FormControl } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Card, Form, FormControl, Modal, Button, Alert } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import { UserContext } from '../context/UserContext';
+import AddIcon from '@material-ui/icons/Add';
+import axios from "axios";
+import Modals from "../components/Modals";
 
 const MyProduct = () => {
     const { userData, productData } = React.useContext(UserContext);
-    const [ userId, setUserId ] = React.useState("");
+    const [ userId, setUserId ] = useState("");
 
-    const [ productId, setProductId ] = React.useState("");
+    const [ productId, setProductId ] = useState("");
     
-    const [ search, setSearch ] = React.useState("");
+    const [ search, setSearch ] = useState("");
+
+    const [ title, setTitle ] = useState("");
+    const [ description, setDescription ] = useState("");
+    const [ price, setPrice ] = useState(0);
+    const [ imgLink, setImgLink ] = useState("");
+
+    const [ show, setShow ] = useState(false);
+    const [ show2, setShow2 ] = useState(false);
 
     React.useEffect(() => {
         if (userData.user !== undefined) {
             setUserId(userData.user.id)
         }
     }, [userData])
+
+    const sellProduct = async () => {
+        const sendData = {
+            title,
+            description,
+            price,
+            imgLink
+        }
+
+        if (title === "" || description === "" || price === 0 || imgLink === "") {
+            setShow(false);
+            setShow2(true);
+            return;
+        }
+
+        const sellRes = await axios.post(`http://localhost:5000/product/sell/${userId}`, sendData);
+
+
+        setShow(false);
+        setTitle("");
+        setDescription("");
+        setPrice("");
+        setImgLink("");
+
+
+        window.location = "/my-account/my-product";
+    }
+
+    console.log(title);
 
     const sellerProduct = productData.filter(m => m.sellerId === userId);
 
@@ -58,6 +98,9 @@ const MyProduct = () => {
                     <Form inline className="p-3">
                         <FormControl type="text" placeholder="Search" className="w-100" onChange={e => setSearch(e.target.value)} />
                     </Form>
+                    <div className="px-4 pb-2 pt-3 add-product" style={{cursor: "pointer"}} onClick={() => setShow(true)} >
+                        <h4 className="text-primary text-left" >Add New Product <AddIcon className="mb-1" /></h4>
+                    </div>
                     {
                         sellerProduct.map((m,i) => {
                             return searchFilter(m,i)
@@ -65,6 +108,49 @@ const MyProduct = () => {
                     }
                 </Card.Body>
             </Card>
+            <Modal show={show} 
+            onHide={() => {
+                setShow(false);
+                setTitle("");
+                setDescription("");
+                setPrice("");
+                setImgLink("");
+            }}
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Add New Product</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Form.Group controlId="title">
+                            <Form.Label className="d-inline">Title</Form.Label>
+                            <Form.Control type="text" placeholder="Enter Title..." className="d-inline-block" onChange={e => setTitle(e.target.value)} />
+                        </Form.Group>
+                        <Form.Group controlId="description">
+                            <Form.Label>Description</Form.Label>
+                            <Form.Control type="text" placeholder="Enter Description..." onChange={e => setDescription(e.target.value)} />
+                        </Form.Group>
+                        <Form.Group controlId="price">
+                            <Form.Label>Price</Form.Label>
+                            <Form.Control type="number" placeholder="Enter Price in USD..." onChange={e => setPrice(e.target.value)} />
+                        </Form.Group>
+                        <Form.Group controlId="imgLink">
+                            <Form.Label>Image Link</Form.Label>
+                            <Form.Control type="text" placeholder="Enter Image Link..." onChange={e => setImgLink(e.target.value)} />
+                        </Form.Group>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer className="border-0">
+                    <Button variant="primary" onClick={sellProduct} className="m-auto">
+                        Add New Product
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+            <Modals error={true} onClicks={() => setShow2(false)} onHides={() => setShow2(false)} show={show2}>
+            <Alert variant="danger">
+                <h4>There is some Error</h4>
+            </Alert>
+            </Modals>
         </div>
     );
 }
