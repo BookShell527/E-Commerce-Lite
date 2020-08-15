@@ -138,6 +138,10 @@ router.post('/addProduct/:productId/:userId', async (req, res) => {
 
         // validation
         if (product.sellerId === userId) return res.status(400).json({ msg: "You can't buy your own product" });
+        if (!productAmount || productAmount === null || productAmount === undefined || productAmount === NaN) return res.status(400).json({ msg: "Not all field has been entered" });
+        if (productAmount === 0) return res.json({ msg: "Can't insert amount = 0" });
+        if (productAmount < 0) return res.json({ msg: "Can't insert amount = negative number" });
+
 
         // object to insert
         const updatedCarts = {
@@ -181,7 +185,9 @@ router.post('/editProduct/:productId/:userId/:tradeId', async (req, res) => {
         const { productAmount } = req.body;
 
         // validation
-        if (!productAmount) return res.status(400).json({ msg: "Not all field has been entered" })
+        if (!productAmount || productAmount === null || productAmount === undefined || productAmount === NaN) return res.status(400).json({ msg: "Not all field has been entered" });
+        if (productAmount === 0) return res.json({ msg: "Can't insert amount = 0" });
+        if (productAmount < 0) return res.json({ msg: "Can't insert amount = negative number" });
     
         // selected data
         const product = await Product.findById(productId);
@@ -220,12 +226,12 @@ router.post('/deleteProduct/:productId/:userId/:tradeId', async (req, res) => {
         // delete and save the data
         const remainingOrder = product.ordered.filter(m => m.tradeId !== tradeId);
         product.ordered = remainingOrder;
-        // product.markModified("ordered");
+        product.markModified("ordered");
         const updatedOrder = await product.save();
         
         const remainingCarts = user.carts.filter(m => m.tradeId !== tradeId);
         user.carts = remainingCarts;
-        // user.markModified("carts");
+        user.markModified("carts");
         const updatedCarts = await user.save();
 
         res.json({

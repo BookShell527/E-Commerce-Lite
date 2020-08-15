@@ -8,10 +8,9 @@ import UserProvider from './context/UserContext'
 import MyAccount from './pages/MyAccount';
 import MyCarts from './pages/MyCarts';
 import MyProduct from './pages/MyProduct';
+import ProductPage from './pages/ProductPage';
 
 export default function App() {
-  const emptyConsole = () => {}
-  
   return ( 
     <BrowserRouter>
       <UserProvider>
@@ -23,6 +22,7 @@ export default function App() {
           <Route exact path="/my-account" component={MyAccount} />
           <Route exact path="/my-account/carts" component={MyCarts} />
           <Route exact path="/my-account/my-product" component={MyProduct} />
+          <Route exact path="/my-account/my-product/:productId" component={ProductPage} />
         </Switch>
       </UserProvider>
     </BrowserRouter>

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
-import { Modal, Button, Card, Form, FormControl } from "react-bootstrap";
+import { Card, Form, FormControl } from "react-bootstrap";
 import axios from 'axios'
 import Modals from '../components/Modals';
 
@@ -28,8 +28,6 @@ const MyCharts = () => {
             setCarts(userData.user.carts);
         }
     }, [userData]);
-
-    console.log(tradeId);
 
     // state and for modal
     const [ show, setShow ] = React.useState(false);
@@ -80,6 +78,8 @@ const MyCharts = () => {
         window.location = "/my-account/carts";
     }
 
+    console.log(carts.length);
+
     const searchFilter = (item, index) => {
         if (search !== "" && item.title.toLowerCase().indexOf(search.toLowerCase()) === -1) {
             return null
@@ -116,8 +116,18 @@ const MyCharts = () => {
                         />
                     </Link>
                 </div>
-        </div>
+            </div>
         )
+    }
+
+    const emptyCarts = () => {
+        if (carts.length === 0) {
+            return <h4 className="pb-2">You have no product to buy</h4>
+        } else {
+            carts.map((m,i) => {
+                return searchFilter(m,i)
+            })
+        }
     }
 
     return (
@@ -134,25 +144,23 @@ const MyCharts = () => {
                     <FormControl type="text" placeholder="Search" className="w-100" onChange={e => setSearch(e.target.value)} />
                 </Form>
                     {
-                        carts.map((m,i) => {
-                            return searchFilter(m,i)
-                        })
+                        emptyCarts()
                     }
                 </Card.Body>
             </Card>
             <Modals show={show} edit={true} 
-                    onClicks={ changeCarts }
-                    onHides={
-                        () => {
-                        setShow(false);
-                        setImgLink("");
-                        setPrice("");
-                        setSellerId("");
-                        setTitle("");
-                        setProductId("");
-                        setTradeId("");
-                        setAmount("");
-                    }}>
+                onClicks={ changeCarts }
+                onHides={
+                    () => {
+                    setShow(false);
+                    setImgLink("");
+                    setPrice("");
+                    setSellerId("");
+                    setTitle("");
+                    setProductId("");
+                    setTradeId("");
+                    setAmount("");
+                }}>
                     <img src={imgLink} alt={title} width="200" />
                     <h6 className="mt-3">Name: {title}</h6>
                     <h6>Product ID: {productId}</h6>

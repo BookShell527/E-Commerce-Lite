@@ -11,6 +11,9 @@ const UserProvider = ({ children }) => {
         user: undefined
     });
 
+    // product state
+    const [ productData, setProductData ] = React.useState([])
+
     // state for register
     const [ displayName, setDisplayName ] = React.useState("");
     const [ email, setEmail ] = React.useState("");
@@ -55,7 +58,10 @@ const UserProvider = ({ children }) => {
                     token,
                     user: userRes.data
                 });
+                
             }
+            const productRes = await axios.get(`http://localhost:5000/product/`);
+            setProductData(productRes.data);
         }
         checkedLoggedIn();
     }, [])
@@ -68,6 +74,7 @@ const UserProvider = ({ children }) => {
             token: undefined,
             user: undefined
         });
+        setProductData({});
         // reset token from localstorage
         localStorage.setItem("auth-token", "");
     }
@@ -83,18 +90,19 @@ const UserProvider = ({ children }) => {
             carts
         }
 
-        // connect node and react
+        // take data and set data
         await axios.post("http://localhost:5000/user/register", newUser);
         const loginRes = await axios.post("http://localhost:5000/user/login", {
             email,
             password
         });
-
-        // set userData
         setUserData({
             token: loginRes.data.token,
             user: loginRes.data.user
         });
+
+        const productRes = await axios.get(`http://localhost:5000/product/`);
+        setProductData(productRes.data);
 
         // add token to localstorage
         localStorage.setItem("auth-token", loginRes.data.token);
@@ -118,14 +126,15 @@ const UserProvider = ({ children }) => {
             password: logPassword
         };
 
-        // connect node and react
+        // take data and set data
         const loginRes = await axios.post("http://localhost:5000/user/login", userLogin);
-
-        // set user data
         setUserData({
             token: loginRes.data.token,
             user: loginRes.data.user,
         });
+
+        const productRes = await axios.get(`http://localhost:5000/product/`);
+        setProductData(productRes.data);
 
         // add token to localstorage
         localStorage.setItem("auth-token", loginRes.data.token);
@@ -138,7 +147,8 @@ const UserProvider = ({ children }) => {
     }
 
     // google login
-    const loginGoogle = res => {
+    const loginGoogle = async res => {
+        const productRes = await axios.get(`http://localhost:5000/product/`);
         // set user data
         setUserData({
             token: res.accessToken,
@@ -149,6 +159,7 @@ const UserProvider = ({ children }) => {
                 carts: []
             }
         })
+        setProductData(productRes.data);
 
         // add token to localstorage and change location
         localStorage.setItem("auth-token", res.accessToken);
@@ -160,7 +171,7 @@ const UserProvider = ({ children }) => {
     const reduceAmount = () => setAmount(m => m - 1)
 
     return (
-        <UserContext.Provider value={{ userData, amount, setAmount, addAmount, reduceAmount, setUserData, setDisplayName, setEmail, setPassword, setConfirmPassword, setLogEmail, setLogPassword, logOut, registerSubmit, loginSubmit, loginGoogle }}>
+        <UserContext.Provider value={{ userData, amount, productData, setAmount, addAmount, reduceAmount, setUserData, setDisplayName, setEmail, setPassword, setConfirmPassword, setLogEmail, setLogPassword, logOut, registerSubmit, loginSubmit, loginGoogle }}>
             { children }
         </UserContext.Provider>
     );
