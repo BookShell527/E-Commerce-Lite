@@ -9,7 +9,7 @@ const Modals = props => {
                 className="overflow-scroll"
             >
                 <Modal.Header closeButton>
-                    <Modal.Title className="d-inline-block">Edit & Product Detail</Modal.Title>
+                    <Modal.Title className="d-inline-block">{props.title}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="text-center">
                     {props.children}
@@ -30,7 +30,7 @@ const Modals = props => {
                     onHide={props.onHides}
                 >
                     <Modal.Header closeButton>
-                        <Modal.Title>Delete Product From The Charts</Modal.Title>
+                        <Modal.Title>{props.title}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body >
                         { props.children }

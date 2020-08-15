@@ -78,8 +78,6 @@ const MyCharts = () => {
         window.location = "/my-account/carts";
     }
 
-    console.log(carts.length);
-
     const searchFilter = (item, index) => {
         if (search !== "" && item.title.toLowerCase().indexOf(search.toLowerCase()) === -1) {
             return null
@@ -150,6 +148,7 @@ const MyCharts = () => {
             </Card>
             <Modals show={show} edit={true} 
                 onClicks={ changeCarts }
+                title="Edit & Product Detail"
                 onHides={
                     () => {
                     setShow(false);

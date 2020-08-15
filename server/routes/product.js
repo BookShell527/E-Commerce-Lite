@@ -36,7 +36,7 @@ router.post("/sell/:sellerId", async (req, res) => {
             title,
             description,
             price,
-            imgLink,
+            imgLink
         });
 
         const savedProduct = await newProduct.save();
@@ -47,9 +47,9 @@ router.post("/sell/:sellerId", async (req, res) => {
 })
 
 // edit products
-router.post("/edit/:productId/:sellerId", async (req, res) => {
+router.post("/edit/:productId", async (req, res) => {
     try {
-        const { productId, sellerId } = req.params
+        const { productId } = req.params
         const { title, description, price, imgLink } = req.body;
 
         // validation
@@ -57,8 +57,6 @@ router.post("/edit/:productId/:sellerId", async (req, res) => {
         if (price <= 0) return res.status(400).json({ msg: "Can't insert that price" });
 
         const product = await Product.findById(productId);
-
-        if (sellerId !== product.sellerId) return res.status(400).json({ msg: "You can't edit other people product"  })
 
         const userId = product.ordered.map(m => m.buyerId);
 
@@ -78,7 +76,6 @@ router.post("/edit/:productId/:sellerId", async (req, res) => {
         }
 
         res.json({
-            user,
             product
         });
     } catch (err) {
@@ -104,7 +101,6 @@ router.delete("/delete/:productId/:sellerId", async (req, res) => {
             const remainingCarts = savedUser.carts.filter(m => m.id != productId);
             savedUser.carts = remainingCarts;
             savedUser.markModified("carts");
-            console.log(savedUser);
         }
 
         res.json({
