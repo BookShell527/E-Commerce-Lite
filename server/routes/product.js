@@ -46,7 +46,7 @@ router.post("/sell/:sellerId", async (req, res) => {
     }
 })
 
-// sell products
+// edit products
 router.post("/edit/:productId/:sellerId", async (req, res) => {
     try {
         const { productId, sellerId, tradeId } = req.params
@@ -55,11 +55,11 @@ router.post("/edit/:productId/:sellerId", async (req, res) => {
         // validation
         if (!title || !description || !price || !imgLink) return res.status(400).json({ msg: "Not all field has been entered" });
         if (price <= 0) return res.status(400).json({ msg: "Can't insert that price" });
-        
+
         const product = await Product.findById(productId);
-        
+
         if (sellerId !== product.sellerId) return res.status(400).json({ msg: "You can't edit other people product"  })
-        
+
         const userId = product.ordered.map(m => m.buyerId);
         const userArray = [];
 
