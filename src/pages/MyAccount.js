@@ -13,7 +13,7 @@ const MyAccount = () => {
 
     // avoid cant read property of undefined
     React.useEffect(() => {
-        if (!authToken || authToken === "" || authToken === undefined || authToken === null) {
+        if (localStorage.getItem("auth-token") === "") {
             history.push("/login");
         }
         if (userData.user !== undefined) {

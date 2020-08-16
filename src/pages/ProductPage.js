@@ -25,7 +25,7 @@ const ProductPage = props => {
     const history = useHistory();
 
     React.useEffect(() => {
-        if (!authToken || authToken === "" || authToken === undefined || authToken === null) {
+        if (localStorage.getItem("auth-token") === "") {
             history.push("/login");
         }
         const getDataProduct = async () => {

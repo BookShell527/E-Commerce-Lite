@@ -9,9 +9,9 @@ import axios from 'axios'
 import Modals from '../components/Modals';
 
 const MyCharts = () => {
-    const { authToken, userData, setUserData, amount, setAmount, addAmount, reduceAmount } = React.useContext(UserContext);
+    const { userData, setUserData, amount, setAmount, addAmount, reduceAmount } = React.useContext(UserContext);
     
-    const [ carts, setCarts ] = React.useState([]);
+    const [ carts, setCarts ] = React.useState([0]);
 
     const [ productId, setProductId ] = React.useState("");
     const [ tradeId, setTradeId ] = React.useState("");
@@ -26,7 +26,7 @@ const MyCharts = () => {
 
     // avoid property of undefined
     React.useEffect(() => {
-        if (!authToken || authToken === "" || authToken === undefined || authToken === null) {
+        if (localStorage.getItem("auth-token") === "") {
             history.push("/login");
         }
         if (userData.user !== undefined) {
@@ -37,8 +37,6 @@ const MyCharts = () => {
     // state and for modal
     const [ show, setShow ] = React.useState(false);
     const [ show2, setShow2 ] = React.useState(false);
-
-    console.log(carts);
 
     // carts functionality
     const changeCarts = async () => {

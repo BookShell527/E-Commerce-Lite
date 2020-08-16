@@ -24,10 +24,9 @@ const MyProduct = () => {
     const [ show2, setShow2 ] = useState(false);
 
     const history = useHistory();
-    console.log(userId);
 
     React.useEffect(() => {
-        if (!authToken || authToken === "" || authToken === undefined || authToken === null) {
+        if (localStorage.getItem("auth-token") === "") {
             history.push("/login");
         }
     }, [userData])

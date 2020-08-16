@@ -42,6 +42,7 @@ const UserProvider = ({ children }) => {
                 localStorage.setItem("auth-token", "");
                 localStorage.setItem("userId", "");
                 token = "";
+                userIdStorage = "";
             }
             const tokenRes = await axios.post('http://localhost:5000/user/tokenIsValid', null, 
                 { 

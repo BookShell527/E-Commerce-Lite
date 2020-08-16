@@ -53,8 +53,8 @@ export default function Login() {
 
     // avoid cant read property of undefined
     React.useEffect(() => {
-        if (userData.token) {
-            history.push("/");
+        if (localStorage.getItem("auth-token") !== "") {
+            history.push("/")
         }
     }, [userData])
 

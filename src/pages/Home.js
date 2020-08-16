@@ -6,7 +6,7 @@ import ProductCard from "../components/ProductCard";
 import Modals from "../components/Modals";
 
 const Home = () => {
-    const { userId, userData, authToken, productData } = React.useContext(UserContext);
+    const { userId, userData, productData } = React.useContext(UserContext);
     const history = useHistory();
 
     // try to avoid filter of undefined
@@ -16,13 +16,12 @@ const Home = () => {
 
     // avoid cant read property of undefined
     React.useEffect(() => {
-        if (!authToken || authToken === "" || authToken === undefined || authToken === null) {
+        if (localStorage.getItem("auth-token") === "") {
             history.push("/login");
         }
-        setNewProductData(productData);
     }, [])
 
-    const filteredProduct = newProductData.filter(m => m.sellerId !== userId);
+    const filteredProduct = productData.filter(m => m.sellerId !== userId);
 
     return (
         <div className="px-4">
