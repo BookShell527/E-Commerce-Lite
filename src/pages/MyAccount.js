@@ -3,14 +3,19 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import { UserContext } from "../context/UserContext";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 const MyAccount = () => {
-    const { userData, logOut } = React.useContext(UserContext);
+    const { authToken, userData, logOut } = React.useContext(UserContext);
     const [ user, setUser ] = React.useState("My Account");
+
+    const history =  useHistory();
 
     // avoid cant read property of undefined
     React.useEffect(() => {
+        if (!authToken || authToken === "" || authToken === undefined || authToken === null) {
+            history.push("/login");
+        }
         if (userData.user !== undefined) {
             setUser(userData.user);
         }

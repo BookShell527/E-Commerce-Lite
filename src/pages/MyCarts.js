@@ -1,6 +1,6 @@
 import React from 'react'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
@@ -9,7 +9,7 @@ import axios from 'axios'
 import Modals from '../components/Modals';
 
 const MyCharts = () => {
-    const { userData, setUserData, amount, setAmount, addAmount, reduceAmount } = React.useContext(UserContext);
+    const { authToken, userData, setUserData, amount, setAmount, addAmount, reduceAmount } = React.useContext(UserContext);
     
     const [ carts, setCarts ] = React.useState([0]);
 
@@ -22,8 +22,13 @@ const MyCharts = () => {
     
     const [ search, setSearch ] = React.useState("");
 
+    const history = useHistory();
+
     // avoid property of undefined
     React.useEffect(() => {
+        if (!authToken || authToken === "" || authToken === undefined || authToken === null) {
+            history.push("/login");
+        }
         if (userData.user !== undefined) {
             setCarts(userData.user.carts);
         }

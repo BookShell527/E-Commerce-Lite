@@ -12,6 +12,7 @@ const UserProvider = ({ children }) => {
     });
 
     // product state
+    const authToken = localStorage.getItem("auth-token");
     const [ productData, setProductData ] = React.useState([])
 
     // state for register
@@ -171,7 +172,7 @@ const UserProvider = ({ children }) => {
     const reduceAmount = () => setAmount(m => m - 1)
 
     return (
-        <UserContext.Provider value={{ userData, amount, productData, setAmount, addAmount, reduceAmount, setUserData, setDisplayName, setEmail, setPassword, setConfirmPassword, setLogEmail, setLogPassword, logOut, registerSubmit, loginSubmit, loginGoogle }}>
+        <UserContext.Provider value={{ authToken, userData, amount, productData, setAmount, addAmount, reduceAmount, setUserData, setDisplayName, setEmail, setPassword, setConfirmPassword, setLogEmail, setLogPassword, logOut, registerSubmit, loginSubmit, loginGoogle }}>
             { children }
         </UserContext.Provider>
     );

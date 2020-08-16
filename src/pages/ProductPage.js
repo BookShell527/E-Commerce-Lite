@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { Form, Card, Accordion, Button } from "react-bootstrap";
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import Modals from '../components/Modals';
+import { UserContext } from '../context/UserContext';
 
 const ProductPage = props => {
     const { productId, userData } = props.match.params;
+    const { authToken } = React.useContext(UserContext);
     const [ dataProduct, setDataProduct ] = useState({});
     const [ ordered, setOrdered ] = useState([]);
 
@@ -20,7 +22,12 @@ const ProductPage = props => {
     const [ price, setPrice ] = useState(0);
     const [ imgLink, setImgLink ] = useState("");
 
+    const history = useHistory();
+
     React.useEffect(() => {
+        if (!authToken || authToken === "" || authToken === undefined || authToken === null) {
+            history.push("/login");
+        }
         const getDataProduct = async () => {
             const productRes = await axios.get(`http://localhost:5000/product/${productId}`);
             setDataProduct(productRes.data);

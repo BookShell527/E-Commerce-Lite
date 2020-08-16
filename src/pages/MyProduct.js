@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { Card, Form, FormControl, Modal, Button, Alert } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import { UserContext } from '../context/UserContext';
 import AddIcon from '@material-ui/icons/Add';
 import axios from "axios";
 import Modals from "../components/Modals";
+import { useContext } from 'react';
 
 const MyProduct = () => {
-    const { userData, productData } = React.useContext(UserContext);
+    const { userData, productData, authToken } = React.useContext(UserContext);
     const [ userId, setUserId ] = useState("");
 
     const [ productId, setProductId ] = useState("");
@@ -23,7 +24,12 @@ const MyProduct = () => {
     const [ show, setShow ] = useState(false);
     const [ show2, setShow2 ] = useState(false);
 
+    const history = useHistory();
+
     React.useEffect(() => {
+        if (!authToken || authToken === "" || authToken === undefined || authToken === null) {
+            history.push("/login");
+        }
         if (userData.user !== undefined) {
             setUserId(userData.user.id)
         }
@@ -52,11 +58,8 @@ const MyProduct = () => {
         setPrice("");
         setImgLink("");
 
-
         window.location = "/my-account/my-product";
     }
-
-    console.log(title);
 
     const sellerProduct = productData.filter(m => m.sellerId === userId);
 

@@ -3,12 +3,12 @@ import { UserContext } from "../context/UserContext";
 import { useHistory } from "react-router-dom";
 
 const Home = () => {
-    const { userData } = React.useContext(UserContext);
+    const { userData, authToken } = React.useContext(UserContext);
     const history = useHistory();
 
     // avoid cant read property of undefined
     React.useEffect(() => {
-        if (!userData.token) {
+        if (!authToken || authToken === "" || authToken === undefined || authToken === null) {
             history.push("/login");
         }
     }, [userData])
