@@ -28,7 +28,7 @@ router.post("/sell/:sellerId", async (req, res) => {
         const { sellerId } = req.params
         const { title, description, price, imgLink } = req.body;
 
-        if (!title || !description || !price || !imgLink) return res.status(400).json({ msg: "Not all field has been entered" });
+        if (!title || !description || !price || !imgLink) return res.json({ msg: "Not all field has been entered" });
         if (price <= 0) return res.status(400).json({ msg: "Can't insert that price" })
 
         const newProduct = new Product({

@@ -41,7 +41,7 @@ const ProductPage = props => {
     }, [])
 
     const deleteProduct = async () => {
-        const deleteRes = await axios.delete(`http://localhost:5000/product/delete/${productId}/${dataProduct.sellerId}`);
+        await axios.delete(`http://localhost:5000/product/delete/${productId}/${dataProduct.sellerId}`);
         window.location = "/my-account/my-product/";
     }
 
@@ -93,7 +93,7 @@ const ProductPage = props => {
                             <Accordion.Collapse eventKey="1" className="mb-5 m-auto mx-0">
                                 <Card.Body className="p-0 mx-0">
                                         {
-                                            ordered.length === 0 ? <h4 className="py-2">No one order this product</h4> 
+                                            ordered.length === 0 ? <h4>No one buy this product</h4>
                                             : ordered.map((m, i) => {
                                                 return (
                                                     <div className="text-left pl-3 pr-4 py-2 d-flex w-100" key={i} >

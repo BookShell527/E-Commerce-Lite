@@ -9,8 +9,7 @@ import Modals from "../components/Modals";
 import { useContext } from 'react';
 
 const MyProduct = () => {
-    const { userData, productData, authToken } = React.useContext(UserContext);
-    const [ userId, setUserId ] = useState("");
+    const { userId, userData, productData, authToken } = React.useContext(UserContext);
 
     const [ productId, setProductId ] = useState("");
     
@@ -25,13 +24,11 @@ const MyProduct = () => {
     const [ show2, setShow2 ] = useState(false);
 
     const history = useHistory();
+    console.log(userId);
 
     React.useEffect(() => {
         if (!authToken || authToken === "" || authToken === undefined || authToken === null) {
             history.push("/login");
-        }
-        if (userData.user !== undefined) {
-            setUserId(userData.user.id)
         }
     }, [userData])
 
@@ -43,14 +40,13 @@ const MyProduct = () => {
             imgLink
         }
 
-        if (title === "" || description === "" || price === 0 || imgLink === "") {
+        if (title === "" || description === "" || price === 0 || price <= 0 || imgLink === "") {
             setShow(false);
             setShow2(true);
             return;
         }
 
         const sellRes = await axios.post(`http://localhost:5000/product/sell/${userId}`, sendData);
-
 
         setShow(false);
         setTitle("");
@@ -62,6 +58,7 @@ const MyProduct = () => {
     }
 
     const sellerProduct = productData.filter(m => m.sellerId === userId);
+    console.log(sellerProduct);
 
     const searchFilter = (item, index) => {
         if (search !== "" && item.title.toLowerCase().indexOf(search.toLowerCase()) === -1) {
@@ -120,7 +117,7 @@ const MyProduct = () => {
                 setImgLink("");
             }}
             >
-                <Modal.Header closeButton>
+                <Modal.Header>
                     <Modal.Title>Add New Product</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -150,9 +147,9 @@ const MyProduct = () => {
                 </Modal.Footer>
             </Modal>
             <Modals error={true} onClicks={() => setShow2(false)} onHides={() => setShow2(false)} show={show2}>
-            <Alert variant="danger">
-                <h4>There is some Error</h4>
-            </Alert>
+                <Alert variant="danger">
+                    <h4>There is some Error</h4>
+                </Alert>
             </Modals>
         </div>
     );

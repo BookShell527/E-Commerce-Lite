@@ -11,7 +11,7 @@ import Modals from '../components/Modals';
 const MyCharts = () => {
     const { authToken, userData, setUserData, amount, setAmount, addAmount, reduceAmount } = React.useContext(UserContext);
     
-    const [ carts, setCarts ] = React.useState([0]);
+    const [ carts, setCarts ] = React.useState([]);
 
     const [ productId, setProductId ] = React.useState("");
     const [ tradeId, setTradeId ] = React.useState("");
@@ -37,6 +37,8 @@ const MyCharts = () => {
     // state and for modal
     const [ show, setShow ] = React.useState(false);
     const [ show2, setShow2 ] = React.useState(false);
+
+    console.log(carts);
 
     // carts functionality
     const changeCarts = async () => {
@@ -84,6 +86,8 @@ const MyCharts = () => {
     }
 
     const searchFilter = (item, index) => {
+        if (carts === []) return <h4 className="pb-2">You have no product to buy</h4>;
+
         if (search !== "" && item.title.toLowerCase().indexOf(search.toLowerCase()) === -1) {
             return null
         }
@@ -123,16 +127,6 @@ const MyCharts = () => {
         )
     }
 
-    const emptyCarts = () => {
-        if (carts.length === 0) {
-            return <h4 className="pb-2">You have no product to buy</h4>
-        } else {
-            carts.map((m,i) => {
-                return searchFilter(m,i)
-            })
-        }
-    }
-
     return (
         <div className="col-md-6 m-auto">
             <Card>
@@ -147,7 +141,9 @@ const MyCharts = () => {
                     <FormControl type="text" placeholder="Search" className="w-100" onChange={e => setSearch(e.target.value)} />
                 </Form>
                     {
-                        emptyCarts()
+                        carts.map((m,i) => {
+                            return searchFilter(m, i)
+                        })
                     }
                 </Card.Body>
             </Card>
@@ -181,7 +177,7 @@ const MyCharts = () => {
                         ${ amount * parseInt(price) }
                     </h5>
                 </Modals>
-                <Modals show={show2} edit={false}
+                <Modals show={show2} edit={false} title="Delete From Carts"
                     onClicks2={() => {
                         setTradeId("");
                         setShow2(false);

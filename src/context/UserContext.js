@@ -12,6 +12,7 @@ const UserProvider = ({ children }) => {
     });
 
     // product state
+    const userId = localStorage.getItem("userId");
     const authToken = localStorage.getItem("auth-token");
     const [ productData, setProductData ] = React.useState([])
 
@@ -36,8 +37,10 @@ const UserProvider = ({ children }) => {
         // check if user logged in or not
         const checkedLoggedIn = async () => {
             let token = localStorage.getItem("auth-token");
+            let userIdStorage = localStorage.getItem("userId");
             if (token === null) {
                 localStorage.setItem("auth-token", "");
+                localStorage.setItem("userId", "");
                 token = "";
             }
             const tokenRes = await axios.post('http://localhost:5000/user/tokenIsValid', null, 
@@ -78,6 +81,7 @@ const UserProvider = ({ children }) => {
         setProductData({});
         // reset token from localstorage
         localStorage.setItem("auth-token", "");
+        localStorage.setItem("userId", "");
     }
 
     // register
@@ -107,6 +111,7 @@ const UserProvider = ({ children }) => {
 
         // add token to localstorage
         localStorage.setItem("auth-token", loginRes.data.token);
+        localStorage.setItem("userId", loginRes.data.user.id);
         
         // reset state and change location
         setDisplayName("");
@@ -139,6 +144,7 @@ const UserProvider = ({ children }) => {
 
         // add token to localstorage
         localStorage.setItem("auth-token", loginRes.data.token);
+        localStorage.setItem("userId", loginRes.data.user.id);
 
         // reset the state
         setLogEmail("");
@@ -164,6 +170,7 @@ const UserProvider = ({ children }) => {
 
         // add token to localstorage and change location
         localStorage.setItem("auth-token", res.accessToken);
+        localStorage.setItem("userId", res.googleId);
         history.push("/");
     }
 
@@ -172,7 +179,7 @@ const UserProvider = ({ children }) => {
     const reduceAmount = () => setAmount(m => m - 1)
 
     return (
-        <UserContext.Provider value={{ authToken, userData, amount, productData, setAmount, addAmount, reduceAmount, setUserData, setDisplayName, setEmail, setPassword, setConfirmPassword, setLogEmail, setLogPassword, logOut, registerSubmit, loginSubmit, loginGoogle }}>
+        <UserContext.Provider value={{ userId, authToken, userData, amount, productData, setAmount, addAmount, reduceAmount, setUserData, setDisplayName, setEmail, setPassword, setConfirmPassword, setLogEmail, setLogPassword, logOut, registerSubmit, loginSubmit, loginGoogle }}>
             { children }
         </UserContext.Provider>
     );
