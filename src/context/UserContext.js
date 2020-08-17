@@ -1,12 +1,16 @@
 import React from 'react';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
+import {
+    useHistory
+} from 'react-router-dom';
 
 export const UserContext = React.createContext(null);
 
-const UserProvider = ({ children }) => {
+const UserProvider = ({
+    children
+}) => {
     React.useContext(UserContext);
-    const [ userData, setUserData ] = React.useState({
+    const [userData, setUserData] = React.useState({
         token: undefined,
         user: undefined
     });
@@ -14,21 +18,21 @@ const UserProvider = ({ children }) => {
     // product state
     const userId = localStorage.getItem("userId");
     const authToken = localStorage.getItem("auth-token");
-    const [ productData, setProductData ] = React.useState([])
+    const [productData, setProductData] = React.useState([])
 
     // state for register
-    const [ displayName, setDisplayName ] = React.useState("");
-    const [ email, setEmail ] = React.useState("");
-    const [ password, setPassword ] = React.useState("");
-    const [ confirmPassword, setConfirmPassword ] = React.useState("");
-    
+    const [displayName, setDisplayName] = React.useState("");
+    const [email, setEmail] = React.useState("");
+    const [password, setPassword] = React.useState("");
+    const [confirmPassword, setConfirmPassword] = React.useState("");
+
     // state for login
-    const [ logEmail, setLogEmail ] = React.useState("");
-    const [ logPassword, setLogPassword ] = React.useState("");
-    
+    const [logEmail, setLogEmail] = React.useState("");
+    const [logPassword, setLogPassword] = React.useState("");
+
     // state for carts
-    const [ carts, setCarts ] = React.useState([]);
-    const [ amount, setAmount ] = React.useState(0);
+    const [carts, setCarts] = React.useState([]);
+    const [amount, setAmount] = React.useState(0);
 
     const history = useHistory();
 
@@ -44,33 +48,29 @@ const UserProvider = ({ children }) => {
                 token = "";
                 userIdStorage = "";
             }
-            const tokenRes = await axios.post('http://localhost:5000/user/tokenIsValid', null, 
-                { 
+            const tokenRes = await axios.post('http://localhost:5000/user/tokenIsValid', null, {
+                headers: {
+                    "x-auth-token": token
+                }
+            });
+            if (tokenRes.data) {
+                const userRes = await axios.get('http://localhost:5000/user/', {
                     headers: {
                         "x-auth-token": token
-                    }
-                }
-            );
-            if (tokenRes.data) {
-                const userRes = await axios.get('http://localhost:5000/user/', 
-                    { 
-                        headers: {
-                            "x-auth-token": token
-                        },
-                    }
-                );
+                    },
+                });
                 setUserData({
                     token,
                     user: userRes.data
                 });
-                
+
             }
             const productRes = await axios.get(`http://localhost:5000/product/`);
             setProductData(productRes.data);
         }
         checkedLoggedIn();
     }, [])
-    
+
 
     // logout
     const logOut = () => {
@@ -113,7 +113,7 @@ const UserProvider = ({ children }) => {
         // add token to localstorage
         localStorage.setItem("auth-token", loginRes.data.token);
         localStorage.setItem("userId", loginRes.data.user.id);
-        
+
         // reset state and change location
         setDisplayName("");
         setPassword("");
@@ -179,10 +179,33 @@ const UserProvider = ({ children }) => {
     const addAmount = () => setAmount(m => m + 1);
     const reduceAmount = () => setAmount(m => m - 1)
 
-    return (
-        <UserContext.Provider value={{ userId, authToken, userData, amount, productData, setAmount, addAmount, reduceAmount, setUserData, setDisplayName, setEmail, setPassword, setConfirmPassword, setLogEmail, setLogPassword, logOut, registerSubmit, loginSubmit, loginGoogle }}>
-            { children }
-        </UserContext.Provider>
+    return ( <
+        UserContext.Provider value = {
+            {
+                userId,
+                authToken,
+                userData,
+                amount,
+                productData,
+                setAmount,
+                addAmount,
+                reduceAmount,
+                setUserData,
+                setDisplayName,
+                setEmail,
+                setPassword,
+                setConfirmPassword,
+                setLogEmail,
+                setLogPassword,
+                logOut,
+                registerSubmit,
+                loginSubmit,
+                loginGoogle
+            }
+        } > {
+            children
+        } <
+        /UserContext.Provider>
     );
 }
 
