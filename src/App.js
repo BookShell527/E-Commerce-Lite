@@ -12,12 +12,12 @@ import ProductPage from './pages/ProductPage';
 import Error from './pages/Error'
 
 export default function App() {
-  // const emptyTheConsole = () => {};
-  // window.console = {
-  //   warn: emptyTheConsole,
-  //   log: emptyTheConsole,
-  //   error: emptyTheConsole
-  // }
+  const emptyTheConsole = () => {};
+  window.console = {
+    warn: emptyTheConsole,
+    log: emptyTheConsole,
+    error: emptyTheConsole
+  }
   return ( 
     <BrowserRouter>
       <UserProvider>
