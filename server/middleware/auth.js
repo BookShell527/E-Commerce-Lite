@@ -1,8 +1,17 @@
 const jwt = require('jsonwebtoken');
+const User = require('../models/UserModels');
 
-const auth = (req, res, next) => {
+const auth = async (req, res, next) => {
     try {
         const token = req.header("x-auth-token");
+        const id = req.header("id");
+        const isGoogle = await User.findById(id);
+
+        if (isGoogle.gooId) {
+            req.user = id;
+            return next();
+        }
+
         if (!token) return res.status(401).json({ msg: "No authentication token, access denied" });
 
         const verified = jwt.verify(token, process.env.JWT_SECRET);

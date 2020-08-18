@@ -47,7 +47,8 @@ const UserProvider = ({ children }) => {
             const tokenRes = await axios.post('http://localhost:5000/user/tokenIsValid', null, 
                 { 
                     headers: {
-                        "x-auth-token": token
+                        "x-auth-token": token,
+                        "id": userIdStorage
                     }
                 }
             );
@@ -55,15 +56,15 @@ const UserProvider = ({ children }) => {
                 const userRes = await axios.get('http://localhost:5000/user/', 
                     { 
                         headers: {
-                            "x-auth-token": token
-                        },
+                            "x-auth-token": token,
+                            "id": userIdStorage
+                        }
                     }
                 );
                 setUserData({
                     token,
                     user: userRes.data
                 });
-                
             }
             const productRes = await axios.get(`http://localhost:5000/product/`);
             setProductData(productRes.data);
@@ -156,22 +157,29 @@ const UserProvider = ({ children }) => {
 
     // google login
     const loginGoogle = async res => {
+        // data sended
+        const googleData = {
+            gooId: res.googleId,
+            email: res.profileObj.email,
+            displayName: `${res.profileObj.givenName} ${res.profileObj.familyName}`,
+            carts
+        }
+
+        // backend -> react
+        const checkAccount = await axios.post(`http://localhost:5000/user/loginGoogle`, googleData);
+
         const productRes = await axios.get(`http://localhost:5000/product/`);
-        // set user data
+        setProductData(productRes.data);
+
+        // set userData
         setUserData({
             token: res.accessToken,
-            user: {
-                id: res.googleId,
-                displayName: res.profileObj.name,
-                email: res.profileObj.email,
-                carts: []
-            }
+            user: checkAccount.data.user
         })
-        setProductData(productRes.data);
 
         // add token to localstorage and change location
         localStorage.setItem("auth-token", res.accessToken);
-        localStorage.setItem("userId", res.googleId);
+        localStorage.setItem("userId", checkAccount.data.user.id);
         history.push("/");
     }
 

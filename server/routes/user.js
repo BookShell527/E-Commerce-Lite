@@ -67,6 +67,37 @@ router.post('/login', async (req, res) => {
     }
 });
 
+// login with google
+router.post("/loginGoogle", async (req, res) => {
+    // get data
+    const { email, gooId, displayName, password, carts } = req.body;
+
+    // check if exist
+    const isExist = await User.findOne({ gooId });
+    if (isExist) {
+        return res.json({
+            user: {
+                id: isExist._id,
+                gooId: isExist.gooId,
+                displayName: isExist.displayName,
+                email: isExist.email
+            }
+        })
+    }
+
+    // if not, save user
+    const newUser = new User({
+        gooId,
+        email,
+        displayName,
+        password: "swr",
+        carts
+    });
+    const savedUser = await newUser.save();
+
+    res.json(savedUser)
+})
+
 // deleting account
 // not used yet
 router.delete('/delete', auth, async (req, res) => {
@@ -83,6 +114,13 @@ router.delete('/delete', auth, async (req, res) => {
 router.post('/tokenIsValid', async (req, res) => {
     try {
         const token = req.header("x-auth-token");
+        const id = req.header("id");
+        const isGoogle = await User.findById(id);
+
+        if (isGoogle.gooId) {
+            return res.json(true);
+        }
+
         if (!token) return res.json(false);
 
         const verified = jwt.verify(token, process.env.JWT_SECRET);
@@ -102,6 +140,17 @@ router.post('/tokenIsValid', async (req, res) => {
 router.get('/', auth, async (req, res) => {
     try {
         const user = await User.findById(req.user);
+
+        if (user.gooId) {
+            return res.json({
+                id: user._id,
+                gooId: user.gooId,
+                displayName: user.displayName,
+                email: user.email,
+                carts: user.carts
+            })
+        }
+
         res.json({
             id: user._id,
             displayName: user.displayName,
@@ -215,7 +264,7 @@ router.post('/editProduct/:productId/:userId/:tradeId', async (req, res) => {
 })
 
 // delete product from carts
-router.post('/deleteProduct/:productId/:userId/:tradeId', async (req, res) => {
+router.delete('/deleteProduct/:productId/:userId/:tradeId', async (req, res) => {
     try {
         const { productId, userId, tradeId } = req.params;
 
@@ -242,5 +291,6 @@ router.post('/deleteProduct/:productId/:userId/:tradeId', async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 })
+
 
 module.exports = router;

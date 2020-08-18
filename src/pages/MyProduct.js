@@ -57,7 +57,6 @@ const MyProduct = () => {
     }
 
     const sellerProduct = productData.filter(m => m.sellerId === userId);
-    console.log(sellerProduct);
 
     const searchFilter = (item, index) => {
         if (search !== "" && item.title.toLowerCase().indexOf(search.toLowerCase()) === -1) {

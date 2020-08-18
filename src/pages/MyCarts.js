@@ -66,7 +66,7 @@ const MyCharts = () => {
 
     const deleteCarts = async () => {
         // connect server and react
-        const response = await axios.post(`http://localhost:5000/user/deleteProduct/${productId}/${userData.user.id}/${tradeId}`);
+        const response = await axios.delete(`http://localhost:5000/user/deleteProduct/${productId}/${userData.user.id}/${tradeId}`);
     
         // set userData
         setUserData({
