@@ -9,6 +9,7 @@ import MyAccount from './pages/MyAccount';
 import MyCarts from './pages/MyCarts';
 import MyProduct from './pages/MyProduct';
 import ProductPage from './pages/ProductPage';
+import Error from './pages/Error'
 
 export default function App() {
   const emptyTheConsole = () => {};
@@ -29,6 +30,7 @@ export default function App() {
           <Route exact path="/my-account/carts" component={MyCarts} />
           <Route exact path="/my-account/my-product" component={MyProduct} />
           <Route exact path="/my-account/my-product/:productId" component={ProductPage} />
+          <Route component={Error} />
         </Switch>
       </UserProvider>
     </BrowserRouter>

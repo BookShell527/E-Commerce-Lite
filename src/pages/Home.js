@@ -1,9 +1,7 @@
 import React from "react";
 import { UserContext } from "../context/UserContext";
 import { useHistory } from "react-router-dom";
-import { Alert } from "react-bootstrap";
 import ProductCard from "../components/ProductCard";
-import Modals from "../components/Modals";
 
 const Home = () => {
     const { userId, userData, productData } = React.useContext(UserContext);
@@ -22,6 +20,8 @@ const Home = () => {
     }, [])
 
     const filteredProduct = productData.filter(m => m.sellerId !== userId);
+
+    console.log(userData);
 
     return (
         <div className="px-4">
