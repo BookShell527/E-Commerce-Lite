@@ -7,6 +7,8 @@ import { Link } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import Brightness7Icon from '@material-ui/icons/Brightness7';
+import Brightness4Icon from '@material-ui/icons/Brightness4';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -19,12 +21,11 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Navbar() {
     const classes = useStyles();
-    
-    const { userData } = React.useContext(UserContext);
 
+    const { userData, dark, darkMode } = React.useContext(UserContext);
     return (
-        <div className={classes.root}>
-            <AppBar position="static">
+        <div className={classes.root} id="nav-root">
+            <AppBar position="static" className={ dark ? "nav-dark" : null }>
                 <Toolbar variant="dense">
                     <Link to="/" className="text-white text-decoration-none ml-5">
                         <Typography variant="h6" color="inherit">
@@ -34,7 +35,8 @@ export default function Navbar() {
                     { 
                         userData.user
                         ? <>
-                            <Link to="/my-account/carts" className="ml-auto mr-3 text-white"><ShoppingCartIcon /></Link>
+                            {dark ? <Link className="ml-auto text-white mr-3" onClick={darkMode}><Brightness4Icon /></Link> : <Link className="ml-auto text-white mr-3" onClick={darkMode}><Brightness7Icon /></Link>}
+                            <Link to="/my-account/carts" className="mr-3 text-white"><ShoppingCartIcon /></Link>
                             <Link to="/my-account" className="btn text-white mr-5"><AccountCircleIcon /> My Account</Link>
                         </>
                         : <>

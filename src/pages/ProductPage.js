@@ -10,7 +10,7 @@ import { UserContext } from '../context/UserContext';
 
 const ProductPage = props => {
     const { productId, userData } = props.match.params;
-    const { authToken } = React.useContext(UserContext);
+    const { authToken, dark } = React.useContext(UserContext);
     const [ dataProduct, setDataProduct ] = useState({});
     const [ ordered, setOrdered ] = useState([]);
 
@@ -59,13 +59,13 @@ const ProductPage = props => {
     return (
         <div className="col-md-6 m-auto">
             <Card className="mb-5">
-                <Card.Header className="card-header text-center">
+                <Card.Header className={dark ? "card-header text-center card-header-dark" : "card-header text-center"}>
                     <Link to="/my-account/my-product" className="d-inline-block float-left">
                         <ArrowBackIosIcon className="text-white mb-n1" />
                     </Link>
                     <h4 className="text-white mb-0">{ dataProduct.title }</h4>
                 </Card.Header>
-                <Card.Body className="card-body text-center py-3">
+                <Card.Body className={dark ? "card-body text-center py-3 card-body-dark" : "card-body text-center py-3"}>
                     <img src={dataProduct.imgLink} alt={dataProduct.title} width="200px" />
                     <div className="m-auto text-center pt-3">
                         <DeleteIcon style={{transform: "scale(1.4)", cursor: "pointer"}} className="text-danger mr-2" 
@@ -85,12 +85,12 @@ const ProductPage = props => {
                     <h5>Price: ${dataProduct.price}</h5>
                     <Accordion defaultActiveKey="0" className="w-100 m-auto mt-n5">
                         <Card className="mt-0">
-                            <Card.Header className="bg-white">
-                                <Accordion.Toggle as={Button} variant="link" eventKey="1">
+                            <Card.Header className={dark ? "bg-dark" : "bg-white"}>
+                                <Accordion.Toggle as={Button} variant="link" eventKey="1" className={dark && "text-white"}>
                                     Ordered By
                                 </Accordion.Toggle>
                             </Card.Header>
-                            <Accordion.Collapse eventKey="1" className="mb-5 m-auto mx-0">
+                            <Accordion.Collapse eventKey="1" className="mb-5 m-auto mx-0 text-dark">
                                 <Card.Body className="p-0 mx-0">
                                         {
                                             ordered.length === 0 ? <h4>No one buy this product</h4>

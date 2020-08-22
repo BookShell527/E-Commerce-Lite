@@ -4,7 +4,7 @@ import axios from 'axios'
 import { UserContext } from '../context/UserContext'
 
 const ProductCard = props => {
-    const { authToken, userId, setUserData, productData } = React.useContext(UserContext);
+    const { authToken, userId, setUserData, productData, dark } = React.useContext(UserContext);
     const [ show, setShow ] = React.useState(false);
     const [ amount, setAmount ] = React.useState(0);
     const addToCarts = async () => {
@@ -27,7 +27,7 @@ const ProductCard = props => {
     return (
         <Card style={{ width: '18rem' }} className="d-inline-block ml-3" >
             <Card.Img variant="top" src={props.img} />
-            <Card.Body>
+            <Card.Body className={dark ? "card-body-dark" : null}>
                 <Card.Title>{props.title}</Card.Title>
                 <Card.Text>
                     {props.description}

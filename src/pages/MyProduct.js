@@ -6,10 +6,9 @@ import { UserContext } from '../context/UserContext';
 import AddIcon from '@material-ui/icons/Add';
 import axios from "axios";
 import Modals from "../components/Modals";
-import { useContext } from 'react';
 
 const MyProduct = () => {
-    const { userId, userData, productData, authToken } = React.useContext(UserContext);
+    const { userId, userData, productData, authToken, dark } = React.useContext(UserContext);
 
     const [ productId, setProductId ] = useState("");
     
@@ -69,7 +68,7 @@ const MyProduct = () => {
         }
 
         return (
-            <div className="acc-options text-left pl-3 pr-1 pr-4 d-flex" key={index}>
+            <div className={dark ? "acc-options text-left pl-3 pr-1 pr-4 d-flex text-white" : "acc-options text-left pl-3 pr-1 pr-4 d-flex text-dark"} key={index}>
                 <div className="d-inline-block">
                     <img src={item.imgLink} alt={item.title} width="100px" />
                     <h5 className="d-inline-block ml-3">{item.title}</h5>
@@ -86,13 +85,13 @@ const MyProduct = () => {
     return (
         <div className="col-md-6 m-auto">
             <Card>
-                <Card.Header className="card-header text-center">
+                <Card.Header className={dark ? "card-header card-header-dark text-center" : "card-header text-center"}>
                     <Link to="/my-account" className="d-inline-block float-left">
                         <ArrowBackIosIcon className="text-white mb-n1" />
                     </Link>
                     <h4 className="text-white mb-0">My Product</h4>
                 </Card.Header>
-                <Card.Body className="card-body text-center p-0">
+                <Card.Body className={dark ? "card-body card-body-dark text-center p-0" : "card-body text-center p-0"}>
                     <Form inline className="p-3">
                         <FormControl type="text" placeholder="Search" className="w-100" onChange={e => setSearch(e.target.value)} />
                     </Form>

@@ -1,16 +1,16 @@
-import React from 'react';
+import React, { useState, createContext, useContext } from 'react';
 import axios from 'axios';
 import {
     useHistory
 } from 'react-router-dom';
 
-export const UserContext = React.createContext(null);
+export const UserContext = createContext(null);
 
 const UserProvider = ({
     children
 }) => {
-    React.useContext(UserContext);
-    const [userData, setUserData] = React.useState({
+    useContext(UserContext);
+    const [userData, setUserData] = useState({
         token: undefined,
         user: undefined
     });
@@ -18,21 +18,34 @@ const UserProvider = ({
     // product state
     const userId = localStorage.getItem("userId");
     const authToken = localStorage.getItem("auth-token");
-    const [productData, setProductData] = React.useState([])
+    const [productData, setProductData] = useState([])
 
     // state for register
-    const [displayName, setDisplayName] = React.useState("");
-    const [email, setEmail] = React.useState("");
-    const [password, setPassword] = React.useState("");
-    const [confirmPassword, setConfirmPassword] = React.useState("");
+    const [displayName, setDisplayName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
 
     // state for login
-    const [logEmail, setLogEmail] = React.useState("");
-    const [logPassword, setLogPassword] = React.useState("");
+    const [logEmail, setLogEmail] = useState("");
+    const [logPassword, setLogPassword] = useState("");
 
     // state for carts
-    const [carts, setCarts] = React.useState([]);
-    const [amount, setAmount] = React.useState(0);
+    const [carts, setCarts] = useState([]);
+    const [amount, setAmount] = useState(0);
+
+    // state for dark mode
+    const [ dark, setDark ] = useState(false);
+
+    const html = document.querySelector("html");
+    const body = document.querySelector("body");
+    if (dark) {
+        html.style.backgroundColor = "#121212";
+        body.style.backgroundColor = "#121212";
+    } else if (!dark) {
+        html.style.backgroundColor = "#fff";
+        body.style.backgroundColor = "#fff";
+    }
 
     const history = useHistory();
 
@@ -55,7 +68,7 @@ const UserProvider = ({
                         "id": userIdStorage
                     }
                 }
-            });
+            );
             if (tokenRes.data) {
                 const userRes = await axios.get('http://localhost:5000/user/', 
                     { 
@@ -85,6 +98,7 @@ const UserProvider = ({
             user: undefined
         });
         setProductData({});
+        setDark(false);
         // reset token from localstorage
         localStorage.setItem("auth-token", "");
         localStorage.setItem("userId", "");
@@ -189,16 +203,22 @@ const UserProvider = ({
 
     // change carts data
     const addAmount = () => setAmount(m => m + 1);
-    const reduceAmount = () => setAmount(m => m - 1)
+    const reduceAmount = () => setAmount(m => m - 1);
 
-    return ( <
-        UserContext.Provider value = {
+    // dark mode functions
+    const darkMode = () => {
+        setDark(prev => !prev);
+    }
+
+    return ( <UserContext.Provider value = {
             {
                 userId,
                 authToken,
                 userData,
                 amount,
                 productData,
+                dark,
+                darkMode,
                 setAmount,
                 addAmount,
                 reduceAmount,
@@ -214,10 +234,9 @@ const UserProvider = ({
                 loginSubmit,
                 loginGoogle
             }
-        } > {
+        }> {
             children
-        } <
-        /UserContext.Provider>
+        }</UserContext.Provider>
     );
 }
 

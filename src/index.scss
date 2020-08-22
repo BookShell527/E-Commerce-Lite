@@ -1,3 +1,7 @@
+html {
+  height: 100%;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -9,17 +13,32 @@ body {
 
 // my accoun
 .card {
+
   margin-top: 50px;
   &-header {
     background-color: #3f51b5;
-  padding-top: 25px;
-  padding-bottom: 20px;
+    padding-top: 25px;
+    padding-bottom: 20px;
+    &-dark {
+      background-color: #333;
+    }
   }
   &-body {
+    &-dark {
+      background-color: #1f1f1f;
+      color: #dddddd;
+    }
     .add-product:hover {
       background-color: rgb(230, 230, 230);
     }
     .acc-options {
+      &-dark {
+        color: #dddddd;
+        &:hover {
+          color: #333;
+        }
+      }
+      color: #333;
       padding-top: 10px;
       padding-bottom: 10px;
       border-bottom: 1px solid rgb(170, 170, 170);
@@ -28,4 +47,9 @@ body {
       }
     }
   }
+}
+
+// dark mode
+.nav-dark {
+  background: #333 !important;
 }
