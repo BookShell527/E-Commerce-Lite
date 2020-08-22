@@ -228,7 +228,7 @@ router.post('/addProduct/:productId/:userId', async (req, res) => {
 })
 
 // edit carts
-router.post('/editProduct/:productId/:userId/:tradeId', async (req, res) => {
+router.patch('/editProduct/:productId/:userId/:tradeId', async (req, res) => {
     try {
         const { productId, userId, tradeId } = req.params;
         const { productAmount } = req.body;

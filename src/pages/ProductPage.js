@@ -52,7 +52,7 @@ const ProductPage = props => {
             price,
             imgLink
         }
-        await axios.post(`http://localhost:5000/product/edit/${productId}`, editData);
+        await axios.patch(`http://localhost:5000/product/edit/${productId}`, editData);
         window.location = `/my-account/my-product/${productId}`;
     }
 

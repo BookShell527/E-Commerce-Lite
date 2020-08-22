@@ -43,7 +43,7 @@ const MyCharts = () => {
         const changeAmount = { productAmount: amount }
 
         // connect server and react
-        const response = await axios.post(`http://localhost:5000/user/editProduct/${productId}/${userData.user.id}/${tradeId}`, changeAmount);
+        const response = await axios.patch(`http://localhost:5000/user/editProduct/${productId}/${userData.user.id}/${tradeId}`, changeAmount);
         // setUserData
         setUserData({
             token: userData.token,

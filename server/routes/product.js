@@ -47,7 +47,7 @@ router.post("/sell/:sellerId", async (req, res) => {
 })
 
 // edit products
-router.post("/edit/:productId", async (req, res) => {
+router.patch("/edit/:productId", async (req, res) => {
     try {
         const { productId } = req.params
         const { title, description, price, imgLink } = req.body;
