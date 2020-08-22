@@ -147,6 +147,7 @@ router.get('/', auth, async (req, res) => {
                 gooId: user.gooId,
                 displayName: user.displayName,
                 email: user.email,
+                dark: user.dark,
                 carts: user.carts
             })
         }
@@ -155,6 +156,7 @@ router.get('/', auth, async (req, res) => {
             id: user._id,
             displayName: user.displayName,
             email: user.email,
+            dark: user.emaild,
             carts: user.carts
         });
     } catch (err) {
@@ -292,5 +294,22 @@ router.delete('/deleteProduct/:productId/:userId/:tradeId', async (req, res) => 
     }
 })
 
+// save dark mode to the database
+router.post("/darkmode/:userId", async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const { dark } = req.body;
+
+        // select data
+        const user = await User.findById(userId);
+
+        user.dark = dark;
+        await user.save();
+
+        res.json(user);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+})
 
 module.exports = router;
