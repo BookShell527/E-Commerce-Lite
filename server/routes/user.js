@@ -70,7 +70,7 @@ router.post('/login', async (req, res) => {
 // login with google
 router.post("/loginGoogle", async (req, res) => {
     // get data
-    const { email, gooId, displayName, password, carts } = req.body;
+    const { email, gooId, displayName, carts } = req.body;
 
     // check if exist
     const isExist = await User.findOne({ gooId });
@@ -90,7 +90,7 @@ router.post("/loginGoogle", async (req, res) => {
         gooId,
         email,
         displayName,
-        password: "swr",
+        password: "aocbiqwvoqoiboebfosdibbwevbqohef982389gr0ehnfvjcbdsjvuisudvihwhe09fh093hu2uib4g",
         carts
     });
     const savedUser = await newUser.save();
@@ -189,7 +189,7 @@ router.post('/addProduct/:productId/:userId', async (req, res) => {
 
         // validation
         if (product.sellerId === userId) return res.status(400).json({ msg: "You can't buy your own product" });
-        if (!productAmount || productAmount === null || productAmount === undefined || productAmount === NaN) return res.status(400).json({ msg: "Not all field has been entered" });
+        if (!productAmount || productAmount === null || productAmount === undefined || isNaN(productAmount)) return res.status(400).json({ msg: "Not all field has been entered" });
         if (productAmount === 0) return res.json({ msg: "Can't insert amount = 0" });
         if (productAmount < 0) return res.json({ msg: "Can't insert amount = negative number" });
 
@@ -236,7 +236,7 @@ router.patch('/editProduct/:productId/:userId/:tradeId', async (req, res) => {
         const { productAmount } = req.body;
 
         // validation
-        if (!productAmount || productAmount === null || productAmount === undefined || productAmount === NaN) return res.status(400).json({ msg: "Not all field has been entered" });
+        if (!productAmount || productAmount === null || productAmount === undefined || isNaN(productAmount)) return res.status(400).json({ msg: "Not all field has been entered" });
         if (productAmount === 0) return res.json({ msg: "Can't insert amount = 0" });
         if (productAmount < 0) return res.json({ msg: "Can't insert amount = negative number" });
     
@@ -278,12 +278,12 @@ router.delete('/deleteProduct/:productId/:userId/:tradeId', async (req, res) => 
         const remainingOrder = product.ordered.filter(m => m.tradeId !== tradeId);
         product.ordered = remainingOrder;
         product.markModified("ordered");
-        const updatedOrder = await product.save();
+        await product.save();
         
         const remainingCarts = user.carts.filter(m => m.tradeId !== tradeId);
         user.carts = remainingCarts;
         user.markModified("carts");
-        const updatedCarts = await user.save();
+        await user.save();
 
         res.json({
             remainingOrder,
