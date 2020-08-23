@@ -13,13 +13,13 @@ const MyAccount = () => {
 
     // avoid cant read property of undefined
     React.useEffect(() => {
-        if (localStorage.getItem("auth-token") === "" || localStorage.getItem("auth-token") === undefined || localStorage.getItem("auth-token") === null) {
+        if (authToken === "" || authToken === undefined) {
             history.push("/login");
         }
         if (userData.user !== undefined) {
             setUser(userData.user);
         }
-    }, [userData]);
+    }, [userData, history, authToken]);
 
     return (
         <div className="col-md-6 m-auto">

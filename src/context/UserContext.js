@@ -1,8 +1,6 @@
 import React, { useState, createContext, useContext } from 'react';
 import axios from 'axios';
-import {
-    useHistory
-} from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 export const UserContext = createContext(null);
 
@@ -89,7 +87,7 @@ const UserProvider = ({
             setProductData(productRes.data);
         }
         checkedLoggedIn();
-    }, [])
+    }, [dark])
 
 
     // logout
@@ -229,6 +227,7 @@ const UserProvider = ({
                 setAmount,
                 addAmount,
                 reduceAmount,
+                setCarts,
                 setUserData,
                 setDisplayName,
                 setEmail,

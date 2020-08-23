@@ -1,10 +1,10 @@
-import React from 'react'
-import { Card, Button, Alert, Modal, Form } from 'react-bootstrap';
-import axios from 'axios'
-import { UserContext } from '../context/UserContext'
+import React from 'react';
+import { Card, Button, Modal, Form } from 'react-bootstrap';
+import axios from 'axios';
+import { UserContext } from '../context/UserContext';
 
 const ProductCard = props => {
-    const { authToken, userId, setUserData, productData, dark } = React.useContext(UserContext);
+    const { userId, dark } = React.useContext(UserContext);
     const [ show, setShow ] = React.useState(false);
     const [ amount, setAmount ] = React.useState(0);
     const addToCarts = async () => {
@@ -17,7 +17,7 @@ const ProductCard = props => {
             productAmount: amount
         }
 
-        const res = await axios.post(`http://localhost:5000/user/addProduct/${props.productId}/${userId}`, productAmount);
+        await axios.post(`http://localhost:5000/user/addProduct/${props.productId}/${userId}`, productAmount);
 
         setShow(false);
 

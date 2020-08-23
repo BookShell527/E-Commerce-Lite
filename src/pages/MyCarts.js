@@ -9,7 +9,7 @@ import axios from 'axios'
 import Modals from '../components/Modals';
 
 const MyCharts = () => {
-    const { userData, setUserData, amount, setAmount, addAmount, reduceAmount, dark } = React.useContext(UserContext);
+    const { authToken, userData, setUserData, amount, setAmount, addAmount, reduceAmount, dark } = React.useContext(UserContext);
     
     const [ carts, setCarts ] = React.useState([0]);
 
@@ -32,7 +32,7 @@ const MyCharts = () => {
         if (userData.user !== undefined) {
             setCarts(userData.user.carts);
         }
-    }, [userData]);
+    }, [userData, history, authToken]);
 
     // state and for modal
     const [ show, setShow ] = React.useState(false);
@@ -91,7 +91,7 @@ const MyCharts = () => {
         }
 
         return (
-            <div className={dark ? "acc-options acc-options-dark text-left pl-3 pr-1 pr-4 d-flex" : "acc-options acc-options-dark text-left pl-3 pr-1 pr-4 d-flex text-dark"} key={index}>
+            <div className={dark ? "acc-options acc-options-dark text-left pl-3 pr-4 d-flex" : "acc-options acc-options-dark text-left pl-3 pr-4 d-flex text-dark"} key={index}>
                 <div className="d-inline-block">
                     <img src={item.imgLink} alt={item.title} width="100px" />
                     <h5 className="d-inline-block ml-3">{item.title} x{item.productAmount}</h5>

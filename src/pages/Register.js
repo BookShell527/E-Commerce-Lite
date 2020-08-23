@@ -47,15 +47,15 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Register() {
     const classes = useStyles();
-    const { setDisplayName, setEmail, setPassword, setConfirmPassword, registerSubmit } = React.useContext(UserContext);
+    const { authToken, setDisplayName, setEmail, setPassword, setConfirmPassword, registerSubmit } = React.useContext(UserContext);
     
     const history = useHistory();
 
     React.useEffect(() => {
-        if (localStorage.getItem("auth-token") !== "") {
+        if (authToken !== "") {
             history.push("/");
         }
-    }, [])
+    }, [history, authToken]);
 
     return (
         <Container component="main" maxWidth="xs">

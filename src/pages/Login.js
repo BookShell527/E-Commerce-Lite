@@ -53,15 +53,15 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Login() {
     const classes = useStyles();
-    const { userData, setLogEmail, setLogPassword, loginSubmit, loginGoogle } = React.useContext(UserContext);
+    const { authToken, userData, setLogEmail, setLogPassword, loginSubmit, loginGoogle } = React.useContext(UserContext);
     const history = useHistory();
 
     // avoid cant read property of undefined
     React.useEffect(() => {
-        if (localStorage.getItem("auth-token") !== "") {
+        if (authToken !== "") {
             history.push("/")
         }
-    }, [userData])
+    }, [userData, history, authToken])
 
     return (
         <Container component="main" maxWidth="xs">

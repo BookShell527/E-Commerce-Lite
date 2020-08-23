@@ -25,10 +25,10 @@ const MyProduct = () => {
     const history = useHistory();
 
     React.useEffect(() => {
-        if (localStorage.getItem("auth-token") === "") {
+        if (authToken === "") {
             history.push("/login");
         }
-    }, [userData])
+    }, [userData, history, authToken])
 
     const sellProduct = async () => {
         const sendData = {
@@ -44,7 +44,7 @@ const MyProduct = () => {
             return;
         }
 
-        const sellRes = await axios.post(`http://localhost:5000/product/sell/${userId}`, sendData);
+        await axios.post(`http://localhost:5000/product/sell/${userId}`, sendData);
 
         setShow(false);
         setTitle("");
@@ -68,7 +68,7 @@ const MyProduct = () => {
         }
 
         return (
-            <div className={dark ? "acc-options text-left pl-3 pr-1 pr-4 d-flex text-white" : "acc-options text-left pl-3 pr-1 pr-4 d-flex text-dark"} key={index}>
+            <div className={dark ? "acc-options text-left pl-3 pr-4 d-flex text-white" : "acc-options text-left pl-3 pr-4 d-flex text-dark"} key={index}>
                 <div className="d-inline-block">
                     <img src={item.imgLink} alt={item.title} width="100px" />
                     <h5 className="d-inline-block ml-3">{item.title}</h5>

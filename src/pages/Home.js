@@ -4,20 +4,15 @@ import { useHistory } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
 
 const Home = () => {
-    const { userId, userData, productData } = React.useContext(UserContext);
+    const { userId, userData, productData, authToken } = React.useContext(UserContext);
     const history = useHistory();
-
-    // try to avoid filter of undefined
-    const [ newProductData, setNewProductData ] = React.useState([]);
-
-    const [ show, setShow ] = React.useState(false);
 
     // avoid cant read property of undefined
     React.useEffect(() => {
-        if (localStorage.getItem("auth-token") === "") {
+        if (authToken === "" || authToken === undefined ) {
             history.push("/login");
         }
-    }, [])
+    }, [history, authToken]);
 
     const filteredProduct = productData.filter(m => m.sellerId !== userId);
 

@@ -9,7 +9,7 @@ import Modals from '../components/Modals';
 import { UserContext } from '../context/UserContext';
 
 const ProductPage = props => {
-    const { productId, userData } = props.match.params;
+    const { productId } = props.match.params;
     const { authToken, dark } = React.useContext(UserContext);
     const [ dataProduct, setDataProduct ] = useState({});
     const [ ordered, setOrdered ] = useState([]);
@@ -25,7 +25,7 @@ const ProductPage = props => {
     const history = useHistory();
 
     React.useEffect(() => {
-        if (localStorage.getItem("auth-token") === "") {
+        if (authToken === "") {
             history.push("/login");
         }
         const getDataProduct = async () => {
@@ -38,7 +38,7 @@ const ProductPage = props => {
             setImgLink(productRes.data.imgLink);
         }
         getDataProduct();
-    }, [])
+    }, [history, authToken, productId]);
 
     const deleteProduct = async () => {
         await axios.delete(`http://localhost:5000/product/delete/${productId}/${dataProduct.sellerId}`);
