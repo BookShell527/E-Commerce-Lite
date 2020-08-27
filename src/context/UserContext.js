@@ -33,7 +33,10 @@ const UserProvider = ({
     const [amount, setAmount] = useState(0);
 
     // state for dark mode
-    const [ dark, setDark ] = useState(false);
+    const [dark, setDark] = useState(false);
+
+    // state for loading
+    const [loading, setLoading] = useState(true)
 
     const html = document.querySelector("html");
     const body = document.querySelector("body");
@@ -81,7 +84,6 @@ const UserProvider = ({
                     user: userRes.data
                 });
                 setDark(userRes.data.dark)
-                console.log(dark);
             }
             const productRes = await axios.get(`http://localhost:5000/product/`);
             setProductData(productRes.data);
@@ -223,6 +225,8 @@ const UserProvider = ({
                 amount,
                 productData,
                 dark,
+                loading,
+                setLoading,
                 darkMode,
                 setAmount,
                 addAmount,

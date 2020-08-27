@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
 
 const Home = () => {
-    const { userId, userData, productData, authToken } = React.useContext(UserContext);
+    const { userId, userData, productData, authToken, loading, setLoading } = React.useContext(UserContext);
     const history = useHistory();
 
     // avoid cant read property of undefined
@@ -12,31 +12,36 @@ const Home = () => {
         if (authToken === "" || authToken === undefined ) {
             history.push("/login");
         }
-    }, [history, authToken]);
+        if (userData.user !== undefined) {
+            setLoading(false)
+        }
+    }, [history, authToken, userData, setLoading]);
 
     const filteredProduct = productData.filter(m => m.sellerId !== userId);
 
-    console.log(userData);
-
-    return (
-        <div className="px-4">
-            {
-                filteredProduct.map((m, i) => {
-                    return (
-                        <ProductCard 
-                            price={m.price}
-                            sellerId={m.sellerId}
-                            productId={m._id}
-                            key={i}
-                            img={m.imgLink}
-                            title={m.title}
-                            description={m.description}
-                        />
-                    )
-                })
-            }
-        </div>
-    );
+    if (loading) {
+        return <h3 className="mt-5 text-center">Loading...</h3>
+    } else {
+        return (
+            <div className="px-4">
+                {
+                    filteredProduct.map((m, i) => {
+                        return (
+                            <ProductCard 
+                                price={m.price}
+                                sellerId={m.sellerId}
+                                productId={m._id}
+                                key={i}
+                                img={m.imgLink}
+                                title={m.title}
+                                description={m.description}
+                            />
+                        )
+                    })
+                }
+            </div>
+        );
+    }
 }
 
 export default Home;

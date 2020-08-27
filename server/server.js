@@ -1,7 +1,6 @@
 const express = require("express");
 const cors = require('cors');
 const mongoose = require('mongoose');
-const path = require('path');
 require('dotenv').config();
 
 // set up express
@@ -9,7 +8,6 @@ const app = express();
 app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
-const NODE_ENV = process.env.NODE_ENV
 
 app.use(cors());
 app.use(express.urlencoded({
