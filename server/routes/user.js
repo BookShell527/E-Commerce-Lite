@@ -156,7 +156,7 @@ router.get('/', auth, async (req, res) => {
             id: user._id,
             displayName: user.displayName,
             email: user.email,
-            dark: user.emaild,
+            dark: user.dark,
             carts: user.carts
         });
     } catch (err) {

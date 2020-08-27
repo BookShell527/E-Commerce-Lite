@@ -83,7 +83,7 @@ const UserProvider = ({
                     token,
                     user: userRes.data
                 });
-                setDark(userRes.data.dark)
+                setDark(userRes.data.dark);
             }
             const productRes = await axios.get(`http://localhost:5000/product/`);
             setProductData(productRes.data);
@@ -214,7 +214,6 @@ const UserProvider = ({
         const body = { dark: !dark }
 
         await axios.post(`http://localhost:5000/user/darkmode/${userId}`, body);
-        console.log(dark);
     }
 
     return ( <UserContext.Provider value = {
