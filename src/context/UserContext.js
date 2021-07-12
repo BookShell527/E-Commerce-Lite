@@ -91,7 +91,6 @@ const UserProvider = ({
         checkedLoggedIn();
     }, [dark])
 
-
     // logout
     const logOut = () => {
         // reset userData

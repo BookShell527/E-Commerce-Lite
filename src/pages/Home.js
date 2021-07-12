@@ -15,6 +15,7 @@ const Home = () => {
         if (userData.user !== undefined) {
             setLoading(false)
         }
+        console.log(userData)
     }, [history, authToken, userData, setLoading]);
 
     const filteredProduct = productData.filter(m => m.sellerId !== userId);
@@ -23,11 +24,11 @@ const Home = () => {
         return <h3 className="mt-5 text-center">Loading...</h3>
     } else {
         return (
-            <div className="px-4">
+            <div className="pr-4">
                 {
                     filteredProduct.map((m, i) => {
                         return (
-                            <ProductCard 
+                            <ProductCard
                                 price={m.price}
                                 sellerId={m.sellerId}
                                 productId={m._id}

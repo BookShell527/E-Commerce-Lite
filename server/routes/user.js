@@ -90,7 +90,7 @@ router.post("/loginGoogle", async (req, res) => {
         gooId,
         email,
         displayName,
-        password: "aocbiqwvoqoiboebfosdibbwevbqohef982389gr0ehnfvjcbdsjvuisudvihwhe09fh093hu2uib4g",
+        password: "{][{}]]@!|#@!}{$!#%#!%!|#{!}#%|!#}%{!|#%}!{|%!%}#{!|",
         carts
     });
     const savedUser = await newUser.save();
